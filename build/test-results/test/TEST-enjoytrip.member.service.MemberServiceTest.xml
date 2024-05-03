@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="enjoytrip.member.service.MemberServiceTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2024-05-03T08:33:47" hostname="DESKTOP-L9R7CAM" time="0.731">
+  <properties/>
+  <testcase name="존재하지 않는 회원 id로 조회 시 실패" classname="enjoytrip.member.service.MemberServiceTest" time="0.731"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
