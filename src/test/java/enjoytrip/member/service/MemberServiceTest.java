@@ -2,11 +2,15 @@ package enjoytrip.member.service;
 
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
-import enjoytrip.member.dto.*;
+import enjoytrip.member.dto.request.MemberSaveRequest;
+import enjoytrip.member.dto.request.MemberUpdateRequest;
+import enjoytrip.member.dto.response.MemberFindResponse;
+import enjoytrip.member.dto.response.MemberSaveResponse;
+import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.mock.MockMember;
 import enjoytrip.member.repository.MemberRepository;
-import org.junit.jupiter.api.Assertions;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

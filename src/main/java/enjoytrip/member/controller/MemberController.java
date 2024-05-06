@@ -1,13 +1,15 @@
 package enjoytrip.member.controller;
 
-import enjoytrip.member.dto.*;
+import enjoytrip.member.dto.request.MemberSaveRequest;
+import enjoytrip.member.dto.request.MemberUpdateRequest;
+import enjoytrip.member.dto.response.MemberFindResponse;
+import enjoytrip.member.dto.response.MemberSaveResponse;
+import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.service.MemberService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.springframework.http.HttpStatus.*;
 

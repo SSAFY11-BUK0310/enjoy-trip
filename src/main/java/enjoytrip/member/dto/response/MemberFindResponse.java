@@ -1,4 +1,4 @@
-package enjoytrip.member.dto;
+package enjoytrip.member.dto.response;
 
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
