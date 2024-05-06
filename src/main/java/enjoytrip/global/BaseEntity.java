@@ -18,16 +18,8 @@ public class BaseEntity {
         this.updatedBy = updatedBy;
     }
 
-    public void changeCreateAt(LocalDateTime createAt) {
-        this.createdAt = createAt;
-    }
-
     public void changeUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
-    }
-
-    public void changeCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
     }
 
     public void changeUpdatedBy(String updatedBy) {
