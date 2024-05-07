@@ -1,24 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="enjoytrip.member.repository.MemberRepository">
-    <insert id="save" parameterType="enjoytrip.member.domain.Member">
-        insert into member
-        values(#{id}, #{email}, #{password}, #{name}, #{age}, #{gender}, #{phoneNumber}, #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
-    </insert>
+  <insert id="save" parameterType="enjoytrip.member.domain.Member">
+    insert into member
+    values (#{id}, #{email}, #{password}, #{name}, #{age}, #{gender}, #{phoneNumber}, #{createdAt},
+            #{updatedAt}, #{createdBy}, #{updatedBy})
+  </insert>
 
-    <select id="findById" parameterType="long" resultType="enjoytrip.member.domain.Member">
-        select id, email, password, name, age, gender, phone_number, created_at, updated_at, created_by, updated_by
-        from member
-        where id = #{id}
-    </select>
+  <select id="findById" parameterType="long" resultType="enjoytrip.member.domain.Member">
+    select id,
+           email,
+           password,
+           name,
+           age,
+           gender,
+           phone_number,
+           created_at,
+           updated_at,
+           created_by,
+           updated_by
+    from member
+    where id = #{id}
+  </select>
 
-    <update id="update" parameterType="enjoytrip.member.domain.Member">
-        update member
-        set email = #{email}, password = #{password}, name = #{name}, age = #{age}, gender = #{gender}, phone_number = #{phoneNumber}
-        where id = #{id}
-    </update>
+  <update id="update" parameterType="enjoytrip.member.domain.Member">
+    update member
+    set email        = #{email},
+        password     = #{password},
+        name         = #{name},
+        age          = #{age},
+        gender       = #{gender},
+        phone_number = #{phoneNumber}
+    where id = #{id}
+  </update>
 
-    <delete id="delete" parameterType="long">
-        delete from member where id = #{id}
-    </delete>
+  <delete id="delete" parameterType="long">
+    delete
+    from member
+    where id = #{id}
+  </delete>
 </mapper>
