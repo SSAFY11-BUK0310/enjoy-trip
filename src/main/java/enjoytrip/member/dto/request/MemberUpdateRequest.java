@@ -15,11 +15,10 @@ public class MemberUpdateRequest {
     private Integer age;
     private Gender gender;
     private String phoneNumber;
-    private LocalDateTime updatedAt;
     private String updatedBy;
 
     @Builder
-    public MemberUpdateRequest(Long id, String email, String password, String name, Integer age, Gender gender, String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
+    public MemberUpdateRequest(Long id, String email, String password, String name, Integer age, Gender gender, String phoneNumber, String updatedBy) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -27,7 +26,6 @@ public class MemberUpdateRequest {
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
-        this.updatedAt = updatedAt;
         this.updatedBy = updatedBy;
     }
 }

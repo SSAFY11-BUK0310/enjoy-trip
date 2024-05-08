@@ -1,5 +1,7 @@
 package enjoytrip.member.service;
 
+import java.time.LocalDateTime;
+
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.request.MemberSaveRequest;
 import enjoytrip.member.dto.request.MemberUpdateRequest;
@@ -24,10 +26,10 @@ public class MemberService {
                 .age(request.getAge())
                 .gender(request.getGender())
                 .phoneNumber(request.getPhoneNumber())
-                .createAt(request.getCreateAt())
-                .updatedAt(request.getUpdatedAt())
+                .createAt(LocalDateTime.now())
+                .updatedAt(LocalDateTime.now())
                 .createdBy(request.getCreatedBy())
-                .createdBy(request.getUpdatedBy())
+                .updatedBy(request.getUpdatedBy())
                 .build();
 
         return new MemberSaveResponse(memberRepository.save(newMember));
@@ -47,7 +49,7 @@ public class MemberService {
                 request.getAge(),
                 request.getGender(),
                 request.getPhoneNumber(),
-                request.getUpdatedAt(),
+                LocalDateTime.now(),
                 request.getUpdatedBy()
         );
         return new MemberUpdateResponse(memberRepository.update(findMember));

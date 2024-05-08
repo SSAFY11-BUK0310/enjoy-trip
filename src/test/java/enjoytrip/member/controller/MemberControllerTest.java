@@ -121,7 +121,6 @@ class MemberControllerTest {
                 .age(20)
                 .gender(Gender.FEMALE)
                 .phoneNumber("010-1234-5678")
-                .updatedAt(LocalDateTime.now())
                 .updatedBy("Test")
                 .build();
     }
@@ -138,9 +137,7 @@ class MemberControllerTest {
                 .age(20)
                 .gender(Gender.FEMALE)
                 .phoneNumber("010-1234-5678")
-                .createAt(LocalDateTime.now())
                 .createdBy("Test")
-                .updatedAt(LocalDateTime.now())
                 .updatedBy("Test")
                 .build();
     }
