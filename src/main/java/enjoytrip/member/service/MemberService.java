@@ -31,8 +31,8 @@ public class MemberService {
                 .createdBy(request.getCreatedBy())
                 .updatedBy(request.getUpdatedBy())
                 .build();
-
-        return new MemberSaveResponse(memberRepository.save(newMember));
+        memberRepository.save(newMember);
+        return new MemberSaveResponse(newMember.getId());
     }
 
     public MemberFindResponse find(Long id) {
