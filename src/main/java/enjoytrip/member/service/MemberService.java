@@ -16,47 +16,49 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class MemberService {
-    private final MemberRepository memberRepository;
 
-    public MemberSaveResponse save(MemberSaveRequest request) {
-        Member newMember = Member.builder()
-            .email(request.getEmail())
-            .password(request.getPassword())
-            .name(request.getName())
-            .age(request.getAge())
-            .gender(request.getGender())
-            .phoneNumber(request.getPhoneNumber())
-            .roleType(request.getRoleType())
-            .createAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now())
-            .createdBy(request.getCreatedBy())
-            .updatedBy(request.getUpdatedBy())
-            .build();
-        memberRepository.save(newMember);
-        return new MemberSaveResponse(newMember.getId());
-    }
+  private final MemberRepository memberRepository;
 
-    public MemberFindResponse find(Long id) {
-        Member findMember = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
-        return new MemberFindResponse(findMember);
-    }
+  public MemberSaveResponse save(MemberSaveRequest request) {
+    Member newMember = Member.builder()
+        .email(request.getEmail())
+        .password(request.getPassword())
+        .name(request.getName())
+        .age(request.getAge())
+        .gender(request.getGender())
+        .phoneNumber(request.getPhoneNumber())
+        .roleType(request.getRoleType())
+        .createAt(LocalDateTime.now())
+        .updatedAt(LocalDateTime.now())
+        .createdBy(request.getCreatedBy())
+        .updatedBy(request.getUpdatedBy())
+        .build();
+    memberRepository.save(newMember);
+    return new MemberSaveResponse(newMember.getId());
+  }
 
-    public MemberUpdateResponse update(MemberUpdateRequest request) {
-        Member findMember = memberRepository.findById(request.getId()).orElseThrow(MemberNotFoundException::new);
-        findMember.update(
-                request.getEmail(),
-                request.getPassword(),
-                request.getName(),
-                request.getAge(),
-                request.getGender(),
-                request.getPhoneNumber(),
-                LocalDateTime.now(),
-                request.getUpdatedBy()
-        );
-        return new MemberUpdateResponse(memberRepository.update(findMember));
-    }
+  public MemberFindResponse find(Long id) {
+    Member findMember = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+    return new MemberFindResponse(findMember);
+  }
 
-    public void delete(Long id) {
-        memberRepository.delete(id);
-    }
+  public MemberUpdateResponse update(MemberUpdateRequest request) {
+    Member findMember = memberRepository.findById(request.getId())
+        .orElseThrow(MemberNotFoundException::new);
+    findMember.update(
+        request.getEmail(),
+        request.getPassword(),
+        request.getName(),
+        request.getAge(),
+        request.getGender(),
+        request.getPhoneNumber(),
+        LocalDateTime.now(),
+        request.getUpdatedBy()
+    );
+    return new MemberUpdateResponse(memberRepository.update(findMember));
+  }
+
+  public void delete(Long id) {
+    memberRepository.delete(id);
+  }
 }

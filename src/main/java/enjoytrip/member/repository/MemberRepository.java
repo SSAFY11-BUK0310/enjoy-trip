@@ -7,8 +7,12 @@ import java.util.Optional;
 
 @Mapper
 public interface MemberRepository {
-    Long save(Member member);
-    Optional<Member> findById(Long id);
-    Long update(Member member);
-    Long delete(Long id);
+
+  Long save(Member member);
+
+  Optional<Member> findById(Long id);
+
+  Long update(Member member);
+
+  Long delete(Long id);
 }

@@ -31,130 +31,135 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @ExtendWith(MockitoExtension.class)
 class MemberControllerTest {
-    @InjectMocks
-    MemberController memberController;
-    @Mock
-    MemberService memberService;
-    MockMvc mockMvc;
-    ObjectMapper objectMapper;
 
-    @BeforeEach
-    public void init() {
-        mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
-        objectMapper = new ObjectMapper();
-    }
+  @InjectMocks
+  MemberController memberController;
+  @Mock
+  MemberService memberService;
+  MockMvc mockMvc;
+  ObjectMapper objectMapper;
 
-    @Test
-    @DisplayName("회원 저장 요청 성공")
-    void save() throws Exception {
-        //given
-        MemberSaveRequest request = getMemberSaveRequest();
-        MemberSaveResponse response = getMemberSaveResponse();
-        String requestJson = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(request);
-        String responseJson = objectMapper.writeValueAsString(response);
-        doReturn(response).when(memberService).save(any(MemberSaveRequest.class));
+  @BeforeEach
+  public void init() {
+    mockMvc = MockMvcBuilders.standaloneSetup(memberController).build();
+    objectMapper = new ObjectMapper();
+  }
 
-        //expected
-        mockMvc.perform(MockMvcRequestBuilders.post("/members")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson)
-                )
-                .andExpect(status().isCreated())
-                .andExpect(content().json(responseJson))
-                .andDo(print());
-    }
+  @Test
+  @DisplayName("회원 저장 요청 성공")
+  void save() throws Exception {
+    //given
+    MemberSaveRequest request = getMemberSaveRequest();
+    MemberSaveResponse response = getMemberSaveResponse();
+    String requestJson = objectMapper.registerModule(new JavaTimeModule())
+        .writeValueAsString(request);
+    String responseJson = objectMapper.writeValueAsString(response);
+    doReturn(response).when(memberService).save(any(MemberSaveRequest.class));
 
-    @Test
-    @DisplayName("회원 조회 요청 성공")
-    void find() throws Exception {
-        //given
-        MemberFindResponse response = new MemberFindResponse(getMember());;
-        String responseJson = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(response);
-        doReturn(response).when(memberService).find(1L);
+    //expected
+    mockMvc.perform(MockMvcRequestBuilders.post("/members")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestJson)
+        )
+        .andExpect(status().isCreated())
+        .andExpect(content().json(responseJson))
+        .andDo(print());
+  }
 
-        //expected
-        mockMvc.perform(MockMvcRequestBuilders.get("/members/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().json(responseJson))
-                .andDo(print());
-    }
+  @Test
+  @DisplayName("회원 조회 요청 성공")
+  void find() throws Exception {
+    //given
+    MemberFindResponse response = new MemberFindResponse(getMember());
+    ;
+    String responseJson = objectMapper.registerModule(new JavaTimeModule())
+        .writeValueAsString(response);
+    doReturn(response).when(memberService).find(1L);
 
-    @Test
-    @DisplayName("회원 정보 수정 요청 성공")
-    void update() throws Exception {
-        //given
-        MemberUpdateRequest request = getMemberUpdateRequest();
-        MemberUpdateResponse response = new MemberUpdateResponse(1L);
-        String requestJson = objectMapper.registerModule(new JavaTimeModule()).writeValueAsString(request);
-        String responseJson = objectMapper.writeValueAsString(response);
-        doReturn(response).when(memberService).update(any(MemberUpdateRequest.class));
+    //expected
+    mockMvc.perform(MockMvcRequestBuilders.get("/members/{id}", 1L)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().json(responseJson))
+        .andDo(print());
+  }
 
-        //expected
-        mockMvc.perform(MockMvcRequestBuilders.put("/members/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson)
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().json(responseJson))
-                .andDo(print());
-    }
+  @Test
+  @DisplayName("회원 정보 수정 요청 성공")
+  void update() throws Exception {
+    //given
+    MemberUpdateRequest request = getMemberUpdateRequest();
+    MemberUpdateResponse response = new MemberUpdateResponse(1L);
+    String requestJson = objectMapper.registerModule(new JavaTimeModule())
+        .writeValueAsString(request);
+    String responseJson = objectMapper.writeValueAsString(response);
+    doReturn(response).when(memberService).update(any(MemberUpdateRequest.class));
 
-    @Test
-    @DisplayName("회원 삭제 요청 성공")
-    void delete() throws Exception {
-        //expected
-        mockMvc.perform(MockMvcRequestBuilders.delete("/members/{id}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                )
-                .andExpect(status().isNoContent())
-                .andDo(print());
-    }
+    //expected
+    mockMvc.perform(MockMvcRequestBuilders.put("/members/{id}", 1L)
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(requestJson)
+        )
+        .andExpect(status().isOk())
+        .andExpect(content().json(responseJson))
+        .andDo(print());
+  }
 
-    private static MemberUpdateRequest getMemberUpdateRequest() {
-        return MemberUpdateRequest.builder()
-                .id(1L)
-                .email("test@email.com")
-                .password("test")
-                .name("Test")
-                .age(20)
-                .gender(Gender.FEMALE)
-                .phoneNumber("010-1234-5678")
-                .updatedBy("Test")
-                .build();
-    }
+  @Test
+  @DisplayName("회원 삭제 요청 성공")
+  void delete() throws Exception {
+    //expected
+    mockMvc.perform(MockMvcRequestBuilders.delete("/members/{id}", 1L)
+            .contentType(MediaType.APPLICATION_JSON)
+        )
+        .andExpect(status().isNoContent())
+        .andDo(print());
+  }
 
-    private static MemberSaveResponse getMemberSaveResponse() {
-        return new MemberSaveResponse(1L);
-    }
+  private static MemberUpdateRequest getMemberUpdateRequest() {
+    return MemberUpdateRequest.builder()
+        .id(1L)
+        .email("test@email.com")
+        .password("test")
+        .name("Test")
+        .age(20)
+        .gender(Gender.FEMALE)
+        .phoneNumber("010-1234-5678")
+        .updatedBy("Test")
+        .build();
+  }
 
-    private static MemberSaveRequest getMemberSaveRequest() {
-        return MemberSaveRequest.builder()
-                .email("test@email.com")
-                .password("test")
-                .name("Test")
-                .age(20)
-                .gender(Gender.FEMALE)
-                .phoneNumber("010-1234-5678")
-                .createdBy("Test")
-                .updatedBy("Test")
-                .build();
-    }
+  private static MemberSaveResponse getMemberSaveResponse() {
+    return new MemberSaveResponse(1L);
+  }
 
-    private static Member getMember() {
-        return Member.builder()
-                .id(1L)
-                .email("test@email.com")
-                .password("test")
-                .name("Test")
-                .age(20)
-                .gender(Gender.FEMALE)
-                .phoneNumber("010-1234-5678")
-                .createAt(LocalDateTime.now())
-                .createdBy("Test")
-                .updatedAt(LocalDateTime.now())
-                .updatedBy("Test")
-                .build();
-    }
+  private static MemberSaveRequest getMemberSaveRequest() {
+    return MemberSaveRequest.builder()
+        .email("test@email.com")
+        .password("test")
+        .name("Test")
+        .age(20)
+        .gender(Gender.FEMALE)
+        .phoneNumber("010-1234-5678")
+        .createdBy("Test")
+        .updatedBy("Test")
+        .build();
+  }
+
+  private static Member getMember() {
+    return Member.builder()
+        .id(1L)
+        .email("test@email.com")
+        .password("test")
+        .name("Test")
+        .age(20)
+        .gender(Gender.FEMALE)
+        .phoneNumber("010-1234-5678")
+        .createAt(LocalDateTime.now())
+        .createdBy("Test")
+        .updatedAt(LocalDateTime.now())
+        .updatedBy("Test")
+        .build();
+  }
 }

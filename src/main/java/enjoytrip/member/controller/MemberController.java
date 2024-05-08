@@ -17,29 +17,31 @@ import static org.springframework.http.HttpStatus.*;
 @AllArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
-    private final MemberService memberService;
 
-    @PostMapping
-    public ResponseEntity<MemberSaveResponse> save(@RequestBody MemberSaveRequest memberSaveRequest) {
-        MemberSaveResponse memberSaveResponse = memberService.save(memberSaveRequest);
-        return ResponseEntity.status(CREATED).body(memberSaveResponse);
-    }
+  private final MemberService memberService;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberFindResponse> find(@PathVariable Long id) {
-        MemberFindResponse memberFindResponse = memberService.find(id);
-        return ResponseEntity.status(OK).body(memberFindResponse);
-    }
+  @PostMapping
+  public ResponseEntity<MemberSaveResponse> save(@RequestBody MemberSaveRequest memberSaveRequest) {
+    MemberSaveResponse memberSaveResponse = memberService.save(memberSaveRequest);
+    return ResponseEntity.status(CREATED).body(memberSaveResponse);
+  }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<MemberUpdateResponse> update(@RequestBody MemberUpdateRequest memberUpdateRequest) {
-        MemberUpdateResponse memberUpdateResponse = memberService.update(memberUpdateRequest);
-        return ResponseEntity.status(OK).body(memberUpdateResponse);
-    }
+  @GetMapping("/{id}")
+  public ResponseEntity<MemberFindResponse> find(@PathVariable Long id) {
+    MemberFindResponse memberFindResponse = memberService.find(id);
+    return ResponseEntity.status(OK).body(memberFindResponse);
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        memberService.delete(id);
-        return ResponseEntity.status(NO_CONTENT).build();
-    }
+  @PutMapping("/{id}")
+  public ResponseEntity<MemberUpdateResponse> update(
+      @RequestBody MemberUpdateRequest memberUpdateRequest) {
+    MemberUpdateResponse memberUpdateResponse = memberService.update(memberUpdateRequest);
+    return ResponseEntity.status(OK).body(memberUpdateResponse);
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> delete(@PathVariable Long id) {
+    memberService.delete(id);
+    return ResponseEntity.status(NO_CONTENT).build();
+  }
 }
