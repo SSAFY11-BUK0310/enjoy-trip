@@ -2,6 +2,7 @@ package enjoytrip.member.service;
 
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.domain.RoleType;
 import enjoytrip.member.dto.request.MemberSaveRequest;
 import enjoytrip.member.dto.request.MemberUpdateRequest;
 import enjoytrip.member.dto.response.MemberFindResponse;
@@ -41,10 +42,10 @@ class MemberServiceTest {
         doReturn(1L).when(memberRepository).save(any(Member.class));
 
         //when
-        MemberSaveResponse response = memberService.save(request);
+        memberService.save(request);
 
         //then
-        assertThat(response.getId()).isEqualTo(1L);
+        verify(memberRepository, times(1)).save(any(Member.class));
     }
 
     @Test
@@ -114,19 +115,21 @@ class MemberServiceTest {
 
     private static MemberSaveRequest getMemberSaveRequest() {
         return MemberSaveRequest.builder()
-                .email("test@email.com")
-                .password("test")
-                .name("Test")
-                .age(20)
-                .gender(Gender.FEMALE)
-                .phoneNumber("010-1234-5678")
-                .createdBy("Test")
-                .updatedBy("Test")
-                .build();
+            .email("test@email.com")
+            .password("test")
+            .name("Test")
+            .age(20)
+            .gender(Gender.FEMALE)
+            .phoneNumber("010-1234-5678")
+            .roleType(RoleType.BASIC)
+            .createdBy("Test")
+            .updatedBy("Test")
+            .build();
     }
 
     private static MockMember getMockMember() {
-        return new MockMember(1L, "test@email.com", "test1234", "username", 20, Gender.FEMALE, "010-1234-1234", LocalDateTime.now(), LocalDateTime.now(), "username", "username");
+        return new MockMember(1L, "test@email.com", "test1234", "username", 20, Gender.FEMALE, "010-1234-1234",
+            RoleType.BASIC, LocalDateTime.now(), LocalDateTime.now(), "username", "username");
     }
 
     private static Member getMember() {

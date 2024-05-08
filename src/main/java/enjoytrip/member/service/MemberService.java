@@ -20,17 +20,18 @@ public class MemberService {
 
     public MemberSaveResponse save(MemberSaveRequest request) {
         Member newMember = Member.builder()
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .name(request.getName())
-                .age(request.getAge())
-                .gender(request.getGender())
-                .phoneNumber(request.getPhoneNumber())
-                .createAt(LocalDateTime.now())
-                .updatedAt(LocalDateTime.now())
-                .createdBy(request.getCreatedBy())
-                .updatedBy(request.getUpdatedBy())
-                .build();
+            .email(request.getEmail())
+            .password(request.getPassword())
+            .name(request.getName())
+            .age(request.getAge())
+            .gender(request.getGender())
+            .phoneNumber(request.getPhoneNumber())
+            .roleType(request.getRoleType())
+            .createAt(LocalDateTime.now())
+            .updatedAt(LocalDateTime.now())
+            .createdBy(request.getCreatedBy())
+            .updatedBy(request.getUpdatedBy())
+            .build();
         memberRepository.save(newMember);
         return new MemberSaveResponse(newMember.getId());
     }

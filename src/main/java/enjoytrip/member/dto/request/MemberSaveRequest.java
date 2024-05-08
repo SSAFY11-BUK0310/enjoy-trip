@@ -1,6 +1,7 @@
 package enjoytrip.member.dto.request;
 
 import enjoytrip.member.domain.Gender;
+import enjoytrip.member.domain.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,18 +18,20 @@ public class MemberSaveRequest {
   private Integer age;
   private Gender gender;
   private String phoneNumber;
+  private RoleType roleType;
   private String createdBy;
   private String updatedBy;
 
   @Builder
   public MemberSaveRequest(String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, String createdBy, String updatedBy) {
+      String phoneNumber, RoleType roleType, String createdBy, String updatedBy) {
     this.email = email;
     this.password = password;
     this.name = name;
     this.age = age;
     this.gender = gender;
     this.phoneNumber = phoneNumber;
+    this.roleType = roleType;
     this.createdBy = createdBy;
     this.updatedBy = updatedBy;
   }

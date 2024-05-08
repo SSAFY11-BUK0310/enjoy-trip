@@ -3,7 +3,7 @@
 <mapper namespace="enjoytrip.member.repository.MemberRepository">
     <insert id="save" parameterType="enjoytrip.member.domain.Member" useGeneratedKeys="true" keyProperty="id">
         insert into member
-        values(#{id}, #{email}, #{password}, #{name}, #{age}, #{gender}, #{phoneNumber}, #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
+        values(#{id}, #{email}, #{password}, #{name}, #{age}, #{gender}, #{phoneNumber}, #{roleType}, #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
     </insert>
 
     <select id="findById" parameterType="long" resultType="enjoytrip.member.domain.Member">

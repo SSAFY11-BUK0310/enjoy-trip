@@ -15,9 +15,10 @@ public class Member extends BaseEntity {
     private Integer age;
     private Gender gender;
     private String phoneNumber;
+    private RoleType roleType;
 
     @Builder
-    public Member(Long id, String email, String password, String name, Integer age, Gender gender, String phoneNumber, LocalDateTime createAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public Member(Long id, String email, String password, String name, Integer age, Gender gender, String phoneNumber, RoleType roleType, LocalDateTime createAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
         super(createAt, updatedAt, createdBy, updatedBy);
         this.id = id;
         this.email = email;
@@ -26,6 +27,7 @@ public class Member extends BaseEntity {
         this.age = age;
         this.gender = gender;
         this.phoneNumber = phoneNumber;
+        this.roleType = roleType;
     }
 
     public void update(String email, String password, String name, Integer age, Gender gender, String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
