@@ -18,8 +18,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @Slf4j
@@ -34,15 +36,18 @@ public class ArticleServiceImpl implements ArticleService{
     private String fileDir;
 
     @Override
-    public Page<Map<String, Object>> find(ArticleFindRequest articleFindRequest, Pageable pageable) {
+    public Page<ArticleFindResponse> find(ArticleFindRequest articleFindRequest, Pageable pageable) {
         RequestList<?> requestList = RequestList.builder()
                 .data(articleFindRequest)
                 .pageable(pageable)
                 .build();
         int total = articleRepository.count(articleFindRequest);
-        List<Map<String, Object>> content = articleRepository.find(requestList);
-
-        return new PageImpl<>(content, pageable, total);
+        List<Article> content = articleRepository.find(requestList);
+        List<ArticleFindResponse> content2 = new ArrayList<>();
+        for (Article article : content) {
+            content2.add(new ArticleFindResponse(article));
+        }
+        return new PageImpl<>(content2, pageable, total);
     }
 
     @Override

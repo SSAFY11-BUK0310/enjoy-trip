@@ -1,0 +1,42 @@
+|00:37:48.650 [Test worker] INFO org.hibernate.validator.internal.util.Version -- HV000001: Hibernate Validator 8.0.1.Final
+Å00:37:49.338 [Test worker] INFO org.springframework.mock.web.MockServletContext -- Initializing Spring TestDispatcherServlet ''
+w00:37:49.339 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Initializing Servlet ''
+Ä00:37:49.342 [Test worker] INFO org.springframework.test.web.servlet.TestDispatcherServlet -- Completed initialization in 3 ms
+
+MockHttpServletRequest:
+      HTTP Method = PUT
+!      Request URI = /articles/1
+       Parameters = {}
+H          Headers = [Content-Type:"multipart/form-data;charset=UTF-8"]
+             Body = null
+    Session Attrs = {}
+
+
+Handler:
+D             Type = enjoytrip.article.controller.ArticleController
+v           Method = enjoytrip.article.controller.ArticleController#update(Long, ArticleUpdateRequest, MultipartFile)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+â          Headers = [Vary:"Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers", Content-Type:"application/json"]
+&     Content type = application/json
+∞             Body = {"id":1,"memberId":1,"title":"title","content":"content","imageName":"imageName","imageUUID":"imageUUID","views":null,"address":"address","type":"type","createdAt":[2024,5,9,0,37,49,396444100],"createdBy":"createdBy","updatedAt":[2024,5,9,0,37,49,396444100],"updatedBy":"updatedBy"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []

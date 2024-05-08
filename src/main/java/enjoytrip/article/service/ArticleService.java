@@ -18,7 +18,7 @@ public interface ArticleService {
     ArticleUpdateResponse update(ArticleUpdateRequest articleUpdateRequest, MultipartFile updateImage) throws IOException;
     void delete(Long id);
 
-    Page<Map<String, Object>> find(ArticleFindRequest articleFindRequest, Pageable pageable);
+    Page<ArticleFindResponse> find(ArticleFindRequest articleFindRequest, Pageable pageable);
 
 
 }
