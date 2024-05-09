@@ -1,5 +1,6 @@
 package enjoytrip.article.util.file;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -8,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
+@Slf4j
 @Component
 public class FileStore {
     @Value("${file.dir}")
@@ -23,7 +25,10 @@ public class FileStore {
         String originalFilename = multipartFile.getOriginalFilename();
         String storeFileName = createStoreFileName(originalFilename);
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
-        return new UploadFile(originalFilename, storeFileName);
+        return UploadFile.builder()
+            .uploadFileName(originalFilename)
+            .uploadFileUUID(storeFileName)
+            .build();
     }
 
     public boolean deleteFile(String fileName) {
@@ -34,8 +39,7 @@ public class FileStore {
                 return file.delete();
             }
         } catch (Exception e) {
-            System.out.println("deleteFile Error");
-            System.out.println(e.getMessage());
+            log.error(e.getMessage());
         }
         return false;
     }

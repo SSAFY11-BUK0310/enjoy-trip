@@ -3,15 +3,15 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="enjoytrip.article.repository.ArticleRepository">
 
-    <select id="find" parameterType="enjoytrip.article.util.RequestList" resultType="enjoytrip.article.domain.Article">
+    <select id="findByPage" parameterType="enjoytrip.article.util.RequestList" resultType="enjoytrip.article.domain.Article">
         select id, member_id, title, content, image_name, image_uuid, views, address, type,  created_at, updated_at, created_by, updated_by
         from article
         <where>
             <if test="true">
-                and type = #{data.type}
+                and type=#{type}
             </if>
-            <if test="data.title != null and data.title != ''">
-                and title like concat('%', #{data.title}, '%')
+            <if test="title != null and title != ''">
+                and title like concat('%', #{title}, '%')
             </if>
         </where>
         <if test="pageable.sort != null and !pageable.sort.isEmpty()">
@@ -24,8 +24,8 @@
 
     </select>
 
-    <select id="count" parameterType="enjoytrip.article.dto.ArticleFindRequest">
-        select count(*)
+    <select id="count" parameterType="enjoytrip.article.domain.Article">
+        select count(type)
         from article
         where type=#{type}
         <if test="title != null and title != ''">

@@ -21,10 +21,10 @@ public class Article extends BaseEntity {
     private String imageUUID;
     private Integer views;
     private String address;
-    private String type;
+    private Type type;
 
     @Builder
-    public Article(Long id, Long memberId, String title, String content, String imageName, String imageUUID, Integer views, String address, String type, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public Article(Long id, Long memberId, String title, String content, String imageName, String imageUUID, Integer views, String address, Type type, LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
         super(createdAt, updatedAt, createdBy, updatedBy);
         this.id = id;
         this.memberId = memberId;

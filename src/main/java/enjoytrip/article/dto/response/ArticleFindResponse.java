@@ -1,12 +1,15 @@
-package enjoytrip.article.dto;
+package enjoytrip.article.dto.response;
 
 
 import enjoytrip.article.domain.Article;
+import enjoytrip.article.domain.Type;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class ArticleFindResponse {
     private Long id;
     private Long memberId;
@@ -16,7 +19,7 @@ public class ArticleFindResponse {
     private String imageUUID;
     private Integer views;
     private String address;
-    private String type;
+    private Type type;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private String createdBy;

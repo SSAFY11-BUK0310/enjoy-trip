@@ -1,16 +1,14 @@
-package enjoytrip.article.dto;
+package enjoytrip.article.dto.request;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import enjoytrip.article.domain.Type;
+import enjoytrip.article.dto.Base64Image;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
 @Getter
-@Setter
-@ToString
+@NoArgsConstructor
 public class ArticleUpdateRequest {
     private Long id;
     private Long memberId;
@@ -18,25 +16,23 @@ public class ArticleUpdateRequest {
     private String content;
     private String imageName;
     private String imageUUID;
+    private Base64Image base64Image;
     private Integer views;
     private String address;
-    private String type;
-    private LocalDateTime updatedAt;
-    private String updatedBy;
+    private Type type;
 
     @Builder
-    public ArticleUpdateRequest(Long id, Long memberId, String title, String content, String imageName, String imageUUID, Integer views,
-                              String address, String type, LocalDateTime updatedAt, String updatedBy) {
+    public ArticleUpdateRequest(Long id, Long memberId, String title, String content, String imageName, String imageUUID, Base64Image base64Image, Integer views,
+                              String address, Type type) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.imageName = imageName;
         this.imageUUID = imageUUID;
+        this.base64Image = base64Image;
         this.views = views;
         this.address = address;
         this.type = type;
-        this.updatedAt = updatedAt;
-        this.updatedBy = updatedBy;
     }
 }

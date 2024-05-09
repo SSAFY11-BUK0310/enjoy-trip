@@ -8,7 +8,4 @@ public class ArticleNotFoundException extends RuntimeException {
         super(MESSAGE);
     }
 
-//    public ArticleNotFoundException(Throwable cause) {
-//        super(MESSAGE, cause);
-//    }
 }
