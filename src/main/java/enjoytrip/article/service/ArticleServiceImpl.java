@@ -27,7 +27,7 @@ import java.util.Set;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ArticleServiceImpl implements ArticleService{
+public class ArticleServiceImpl implements ArticleService {
 
     private final ArticleRepository articleRepository;
     private final FileStore fileStore;
@@ -36,13 +36,15 @@ public class ArticleServiceImpl implements ArticleService{
     private String fileDir;
 
     @Override
-    public Page<ArticleFindResponse> find(ArticleFindRequest articleFindRequest, Pageable pageable) {
+    public Page<ArticleFindResponse> find(ArticleFindRequest articleFindRequest,
+        Pageable pageable) {
         RequestList<?> requestList = RequestList.builder()
-                .data(articleFindRequest)
-                .pageable(pageable)
-                .build();
+            .data(articleFindRequest)
+            .pageable(pageable)
+            .build();
         int total = articleRepository.count(articleFindRequest);
         List<Article> content = articleRepository.find(requestList);
+
         List<ArticleFindResponse> content2 = new ArrayList<>();
         for (Article article : content) {
             content2.add(new ArticleFindResponse(article));
@@ -52,7 +54,8 @@ public class ArticleServiceImpl implements ArticleService{
 
     @Override
     public ArticleFindResponse findById(Long id) {
-        Article findArticle =  articleRepository.findById(id).orElseThrow(ArticleNotFoundException::new);
+        Article findArticle = articleRepository.findById(id)
+            .orElseThrow(ArticleNotFoundException::new);
         return new ArticleFindResponse(findArticle);
     }
 
@@ -62,7 +65,7 @@ public class ArticleServiceImpl implements ArticleService{
         // imageUUID 생성, 이미지 저장.
         UploadFile uploadFile = fileStore.storeFile(articleSaveRequest.getUploadImage());
         // uploadFile이 null이면 default image 넣어주자.
-        if(uploadFile == null) {
+        if (uploadFile == null) {
             String NO_IMAGE = "no_image.png"; // file.dir 안에 있어야 한다.
             uploadFile = new UploadFile(NO_IMAGE, NO_IMAGE);
         }
@@ -71,26 +74,29 @@ public class ArticleServiceImpl implements ArticleService{
         articleSaveRequest.setCreatedAt(LocalDateTime.now());
 
         Article newArticle = Article.builder()
-                .memberId(articleSaveRequest.getMemberId())
-                .title(articleSaveRequest.getTitle())
-                .content(articleSaveRequest.getContent())
-                .imageName(uploadFile.getUploadFileName())
-                .imageUUID(uploadFile.getUploadFileUUID())
-                .type(articleSaveRequest.getType())
-                .views(0)
-                .address(articleSaveRequest.getAddress())
-                .createdAt(articleSaveRequest.getCreatedAt())
-                .createdBy(articleSaveRequest.getMemberId().toString()) // memberRepository에서 id로 email 찾아와서 넣어주자.
-                .build();
+            .memberId(articleSaveRequest.getMemberId())
+            .title(articleSaveRequest.getTitle())
+            .content(articleSaveRequest.getContent())
+            .imageName(uploadFile.getUploadFileName())
+            .imageUUID(uploadFile.getUploadFileUUID())
+            .type(articleSaveRequest.getType())
+            .views(0)
+            .address(articleSaveRequest.getAddress())
+            .createdAt(articleSaveRequest.getCreatedAt())
+            .createdBy(articleSaveRequest.getMemberId()
+                .toString()) // memberRepository에서 id로 email 찾아와서 넣어주자.
+            .build();
 
         Long result = articleRepository.save(newArticle);
         return new ArticleSaveResponse(newArticle);
     }
 
     @Override
-    public ArticleUpdateResponse update(ArticleUpdateRequest articleUpdateRequest, MultipartFile updateImage) throws IOException {
+    public ArticleUpdateResponse update(ArticleUpdateRequest articleUpdateRequest,
+        MultipartFile updateImage) throws IOException {
 
-        articleRepository.findById(articleUpdateRequest.getId()).orElseThrow(ArticleNotFoundException::new);
+        articleRepository.findById(articleUpdateRequest.getId())
+            .orElseThrow(ArticleNotFoundException::new);
 
         // update할 이미지가 있다면 기존 이미지 삭제(no_image.png 제외)
         // 새로운 이미지에 대한 UUID 만들고 저장
@@ -108,25 +114,25 @@ public class ArticleServiceImpl implements ArticleService{
         articleUpdateRequest.setUpdatedBy(""); // memberId로 email 받아서 넣자.
 
         Article newArticle = Article.builder()
-                .id(articleUpdateRequest.getId())
-                .memberId(articleUpdateRequest.getMemberId())
-                .title(articleUpdateRequest.getTitle())
-                .content(articleUpdateRequest.getContent())
-                .imageName(articleUpdateRequest.getImageName())
-                .imageUUID(articleUpdateRequest.getImageUUID())
-                .views(articleUpdateRequest.getViews())
-                .address(articleUpdateRequest.getAddress())
-                .type(articleUpdateRequest.getType())
-                .updatedAt(articleUpdateRequest.getUpdatedAt())
-                .updatedBy(articleUpdateRequest.getUpdatedBy())
-                .build();
+            .id(articleUpdateRequest.getId())
+            .memberId(articleUpdateRequest.getMemberId())
+            .title(articleUpdateRequest.getTitle())
+            .content(articleUpdateRequest.getContent())
+            .imageName(articleUpdateRequest.getImageName())
+            .imageUUID(articleUpdateRequest.getImageUUID())
+            .views(articleUpdateRequest.getViews())
+            .address(articleUpdateRequest.getAddress())
+            .type(articleUpdateRequest.getType())
+            .updatedAt(articleUpdateRequest.getUpdatedAt())
+            .updatedBy(articleUpdateRequest.getUpdatedBy())
+            .build();
         Long result = articleRepository.update(newArticle);
         return new ArticleUpdateResponse(newArticle);
     }
 
     @Override
     public void delete(Long id) {
-        String imageUUID  = findById(id).getImageUUID();
+        String imageUUID = findById(id).getImageUUID();
         if (!"no_image.png".equals(imageUUID)) {
             fileStore.deleteFile(imageUUID);
         }
