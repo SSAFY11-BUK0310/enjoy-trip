@@ -24,6 +24,22 @@
     where id = #{id}
   </select>
 
+  <select id="findByEmail" parameterType="string" resultType="enjoytrip.member.domain.Member">
+    select id,
+           email,
+           password,
+           name,
+           age,
+           gender,
+           phone_number,
+           created_at,
+           updated_at,
+           created_by,
+           updated_by
+    from member
+    where email = #{email}
+  </select>
+
   <update id="update" parameterType="enjoytrip.member.domain.Member">
     update member
     set email        = #{email},

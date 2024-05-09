@@ -36,7 +36,7 @@ public class MemberController {
 
   @GetMapping("/{id}")
   public ResponseEntity<MemberFindResponse> find(@PathVariable Long id) {
-    MemberFindResponse memberFindResponse = memberService.find(id);
+    MemberFindResponse memberFindResponse = memberService.findById(id);
     return ResponseEntity.status(OK).body(memberFindResponse);
   }
 

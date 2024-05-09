@@ -1,10 +1,9 @@
 package enjoytrip.member.domain;
 
-import enjoytrip.global.BaseEntity;
+import enjoytrip.global.domain.BaseEntity;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 public class Member extends BaseEntity {
