@@ -5,6 +5,7 @@ import lombok.*;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class ArticleFindRequest {
     private Type type;
     private String title;

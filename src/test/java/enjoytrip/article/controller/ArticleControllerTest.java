@@ -1,275 +1,238 @@
-//package enjoytrip.article.controller;
-//
-//import static org.mockito.Mockito.any;
-//import static org.mockito.Mockito.doReturn;
-//import static org.mockito.Mockito.eq;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-//import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-//import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-//
-//import com.fasterxml.jackson.databind.ObjectMapper;
-//import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-//import enjoytrip.article.domain.Article;
-//import enjoytrip.article.dto.request.ArticleFindRequest;
-//import enjoytrip.article.dto.response.ArticleFindResponse;
-//import enjoytrip.article.dto.request.ArticleSaveRequest;
-//import enjoytrip.article.dto.request.ArticleUpdateRequest;
-//import enjoytrip.article.dto.response.ArticleSaveResponse;
-//import enjoytrip.article.util.file.FileStore;
-//import java.io.FileInputStream;
-//import java.nio.charset.Charset;
-//import java.nio.charset.StandardCharsets;
-//import java.time.LocalDateTime;
-//import java.util.ArrayList;
-//import java.util.List;
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.DisplayName;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.junit.jupiter.MockitoExtension;
-//import org.springframework.data.domain.Page;
-//import org.springframework.data.domain.PageImpl;
-//import org.springframework.data.domain.PageRequest;
-//import org.springframework.data.domain.Pageable;
-//import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-//import org.springframework.http.HttpMethod;
-//import org.springframework.http.MediaType;
-//import org.springframework.mock.web.MockMultipartFile;
-//import org.springframework.test.web.servlet.MockMvc;
-//import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-//
-//@ExtendWith(MockitoExtension.class)
-//class ArticleControllerTest {
-//
-//    @InjectMocks
-//    private ArticleController articleController;
-//
-//    @Mock
-//    private ArticleService articleService;
-//
-//    @Mock
-//    private FileStore fileStore;
-//
-//    private MockMvc mockMvc;
-//    private ObjectMapper objectMapper;
-//
-//    @BeforeEach
-//    public void init() {
-//        mockMvc = MockMvcBuilders.standaloneSetup(articleController)
-//            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
-//            .build();
-//
-//        objectMapper = new ObjectMapper();
-//    }
-//
-//    @DisplayName("게시물 다건 조회 성공")
-//    @Test
-//    void findSuccessTest() throws Exception {
-//        // given
-////        ArticleFindRequest articleFindRequest = new ArticleFindRequest("tour", null);
-//        Pageable pageable = PageRequest.of(0, 10);
-//
-//        List<ArticleFindResponse> list = new ArrayList<>();
-//        for (int i = 1; i <= 10; i++) {
-//            list.add(new ArticleFindResponse(Article.builder()
-//                .id((long) i)
-//                .memberId((long) 1)
-//                .title("title" + i)
-//                .content("content" + i)
-//                .imageName("imageName" + i)
-//                .imageUUID("imageUUID" + i)
-//                .address("address" + i)
-//                .type("type" + i)
-//                .createdAt(LocalDateTime.now())
-//                .createdBy("createdBy" + i)
-//                .updatedAt(LocalDateTime.now())
-//                .updatedBy("updatedBy" + i)
-//                .build()));
-//        }
-//
-//        Page<ArticleFindResponse> response = new PageImpl<>(list, pageable, 0);
-//
+package enjoytrip.article.controller;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import enjoytrip.article.domain.Article;
+import enjoytrip.article.domain.Type;
+import enjoytrip.article.dto.Base64Image;
+import enjoytrip.article.dto.form.ArticleSaveForm;
+import enjoytrip.article.dto.form.ArticleUpdateForm;
+import enjoytrip.article.dto.request.ArticleFindRequest;
+import enjoytrip.article.dto.request.ArticleSaveRequest;
+import enjoytrip.article.dto.request.ArticleUpdateRequest;
+import enjoytrip.article.dto.response.ArticleFindResponse;
+import enjoytrip.article.dto.response.ArticleSaveResponse;
+import enjoytrip.article.dto.response.ArticleUpdateResponse;
+import enjoytrip.article.service.ArticleService;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+@ExtendWith(MockitoExtension.class)
+class ArticleControllerTest {
+
+    @InjectMocks
+    private ArticleController articleController;
+
+    @Mock
+    private ArticleService articleService;
+
+    private MockMvc mockMvc;
+    private ObjectMapper objectMapper;
+
+    @BeforeEach
+    public void init() {
+        mockMvc = MockMvcBuilders.standaloneSetup(articleController)
+            .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver())
+            .build();
+
+        objectMapper = new ObjectMapper();
+    }
+
+    @DisplayName("게시물 다건 조회 성공")
+    @Test
+    void findByPageSuccessTest() throws Exception {
+        // given
+        Pageable pageable = PageRequest.of(0, 10);
+        ArticleFindRequest request = new ArticleFindRequest(Type.BOARD, "title");
+
+        List<ArticleFindResponse> list = getArticleFindResponses();
+        Page<ArticleFindResponse> response = new PageImpl<>(list, pageable, 0);
+
+        String requestJson = objectMapper.writeValueAsString(request);
+        String responseJson = objectMapper.registerModule(new JavaTimeModule())
+            .writeValueAsString(response);
+
+        doReturn(response).when(articleService)
+            .findByPage(any(ArticleFindRequest.class), any(Pageable.class));
+
+        // expected
+        mockMvc.perform(get("/articles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .param("page", "0")
+                .param("size", "10")
+                .content(requestJson)
+                .characterEncoding("UTF-8"))
+            .andExpect(status().isOk())
+            .andExpect(content().json(responseJson))
+            .andDo(print());
+    }
+
+    @DisplayName("게시물 단건 조회 성공")
+    @Test
+    void findByIdSuccessTest() throws Exception {
+        // given
+        ArticleFindResponse response = getArticleFindResponse();
+
+        String responseJson = objectMapper.registerModule(new JavaTimeModule())
+            .writeValueAsString(response);
+
+        doReturn(response).when(articleService).findById(1L);
+
+        // expected
+
+        mockMvc.perform(get("/articles/{id}", 1L))
+            .andExpect(status().isOk())
+            .andExpect(content().json(responseJson))
+            .andDo(print());
+
+    }
+
+    @DisplayName("게시물 등록 성공")
+    @Test
+    void saveSuccessTest() throws Exception {
+        //given
+        ArticleSaveRequest request = getArticleSaveRequest();
+        ArticleSaveResponse response = new ArticleSaveResponse(1L);
+
+        String requestJson = objectMapper.registerModule(new JavaTimeModule())
+            .writeValueAsString(request);
+        String responseJson = objectMapper.registerModule(new JavaTimeModule())
+            .writeValueAsString(response);
+
+        doReturn(response).when(articleService).save(any(ArticleSaveForm.class));
+
+        // exptected
+        mockMvc.perform(post("/articles")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestJson))
+            .andExpect(status().isCreated())
+            .andExpect(content().json(responseJson))
+            .andDo(print());
+    }
+
+    @DisplayName("게시물 수정 성공")
+    @Test
+    void updateSuccessTest() throws Exception {
+        // given
+        ArticleUpdateRequest request = getArticleUpdateRequest();
+        ArticleUpdateResponse response = new ArticleUpdateResponse(1L);
+        ArticleUpdateForm updateForm = new ArticleUpdateForm(request);
+
+        String requestJson = objectMapper.registerModule(new JavaTimeModule())
+            .writeValueAsString(request);
+
 //        String responseJson = objectMapper.registerModule(new JavaTimeModule())
 //            .writeValueAsString(response);
-//
-//        doReturn(response).when(articleService)
-//            .find(any(ArticleFindRequest.class), any(Pageable.class));
-//
-//        // expected
-//        mockMvc.perform(get("/articles")
-//                .param("type", "tour")
-//                .param("page", "0")
-//                .param("size", "10"))
-//            .andExpect(status().isOk())
-//            .andExpect(content().json(responseJson))
-//            .andDo(print());
-//    }
-//
-//    @DisplayName("게시물 단건 조회 성공")
-//    @Test
-//    void findByIdSuccessTest() throws Exception {
-//        // given
-//        ArticleFindResponse response = new ArticleFindResponse(Article.builder()
-//            .id(1L)
-//            .memberId(1L)
-//            .title("title")
-//            .content("content")
-//            .imageName("imageName")
-//            .imageUUID("imageUUID")
-//            .address("address")
-//            .type("type")
-//            .createdAt(LocalDateTime.now())
-//            .createdBy("createdBy")
-//            .updatedAt(LocalDateTime.now())
-//            .updatedBy("updatedBy")
-//            .build());
-//
-//        String responseJson = objectMapper.registerModule(new JavaTimeModule())
-//            .writeValueAsString(response);
-//
-//        doReturn(response).when(articleService).findById(1L);
-//
-//        // expected
-//
-//        mockMvc.perform(get("/articles/{id}", 1L))
-//            .andExpect(status().isOk())
-//            .andExpect(content().json(responseJson))
-//            .andDo(print());
-//
-//    }
-//
-//
-//    @Test
-//    void saveSuccessTest() throws Exception {
-//        // given
-//        MockMultipartFile uploadImage = new MockMultipartFile(
-//            "uploadImage",
-//            "test.png",
-//            "image/png",
-//            new FileInputStream("src/test/resources/images/test.png")
-//        );
-//
-//        ArticleSaveRequest request = ArticleSaveRequest.builder()
-//            .memberId(1L)
-//            .title("title")
-//            .content("content")
-////                .uploadImage(uploadImage)
-//            .address("address")
-//            .type("type")
-//            .createdAt(LocalDateTime.now())
-//            .build();
-//
-//        ArticleSaveResponse response = new ArticleSaveResponse(Article.builder()
-//            .id(1L)
-//            .memberId(1L)
-//            .title("title")
-//            .content("content")
-//            .imageName("imageName")
-//            .imageUUID("imageUUID")
-//            .address("address")
-//            .type("type")
-//            .createdAt(LocalDateTime.now())
-//            .createdBy("createdBy")
-//            .updatedAt(LocalDateTime.now())
-//            .updatedBy("updatedBy")
-//            .build());
-//
-//        String requestJson = objectMapper.registerModule(new JavaTimeModule())
-//            .writeValueAsString(request);
-//        String responseJson = objectMapper.registerModule(new JavaTimeModule())
-//            .writeValueAsString(response);
-//
-//        doReturn(response).when(articleService).save(any(ArticleSaveRequest.class));
-//
-//        /*
-//          - 해결 못한 부분 설명
-//          인터넷에 찾아보면 거의 모두 MockMultipartFile을 만들고 아래처럼 file(mockFile)을 집어 넣는다.
-//          근데 print() 결과에 보면 file에 대한 내용이 없다.
-//         */
-//        // exptected
-//        mockMvc.perform(multipart("/articles")
-//                .file(uploadImage)
-//                .content(requestJson)
-//                .contentType(MediaType.MULTIPART_FORM_DATA)
-//                .characterEncoding(Charset.defaultCharset()))
-//            .andExpect(status().isOk())
-//            .andExpect(content().json(responseJson))
-//            .andDo(print());
-//    }
-//
-//    @Test
-//    void update() throws Exception {
-//        // given
-//        MockMultipartFile updateImage = new MockMultipartFile(
-//            "updateImage",
-//            "test.png",
-//            "image/png",
-//            new FileInputStream("src/test/resources/images/test.png")
-//        );
-//
-//        ArticleUpdateRequest request = ArticleUpdateRequest.builder()
-//            .id(1L)
-//            .memberId(1L)
-//            .title("title")
-//            .content("content")
-//            .imageName("imageName")
-//            .imageUUID("imageUUID")
-//            .address("address")
-//            .type("type")
-//            .updatedAt(LocalDateTime.now())
-//            .updatedBy("updatedBy")
-//            .build();
-//
-//        String requestJson = objectMapper.registerModule(new JavaTimeModule())
-//            .writeValueAsString(request);
-//        MockMultipartFile requestFile = new MockMultipartFile(
-//            "data",
-//            "",
-//            String.valueOf(MediaType.APPLICATION_JSON),
-//            requestJson.getBytes(StandardCharsets.UTF_8)
-//        );
-//
-//        ArticleUpdateResponse response = new ArticleUpdateResponse(
-//            Article.builder()
-//                .id(1L)
-//                .memberId(1L)
-//                .title("title")
-//                .content("content")
-//                .imageName("imageName")
-//                .imageUUID("imageUUID")
-//                .address("address")
-//                .type("type")
-//                .createdAt(LocalDateTime.now())
-//                .createdBy("createdBy")
-//                .updatedAt(LocalDateTime.now())
-//                .updatedBy("updatedBy")
-//                .build()
-//        );
-//
-//        doReturn(response).when(articleService)
-//            .update(any(ArticleUpdateRequest.class), eq(updateImage));
-//
-//        // expected
-//        mockMvc.perform(multipart(HttpMethod.PUT, "/articles/{id}", 1L)
-//                .file(updateImage)
-//                .file(requestFile)
-//                .contentType(MediaType.MULTIPART_FORM_DATA)
-//                .characterEncoding(StandardCharsets.UTF_8)
-//            )
-//            .andExpect(status().isOk())
-//            .andDo(print());
-//
-//    }
-//
-//    @DisplayName("게시물 삭제 성공")
-//    @Test
-//    void deleteSuccessTest() throws Exception {
-//        mockMvc.perform(delete("/articles/{id}", 1L)
-//        ).andExpect(status().isNoContent());
-//    }
-//}
+
+        doReturn(response).when(articleService)
+            .update(any(ArticleUpdateForm.class));
+
+        // expected
+        mockMvc.perform(put("/articles/{id}", 1L)
+                .content(requestJson)
+                .contentType(MediaType.APPLICATION_JSON)
+                .characterEncoding(StandardCharsets.UTF_8)
+            )
+            .andExpect(status().isOk())
+            .andDo(print());
+
+    }
+
+    @DisplayName("게시물 삭제 성공")
+    @Test
+    void deleteSuccessTest() throws Exception {
+        mockMvc.perform(delete("/articles/{id}", 1L)
+        ).andExpect(status().isNoContent());
+    }
+
+    private static List<ArticleFindResponse> getArticleFindResponses() {
+        List<ArticleFindResponse> list = new ArrayList<>();
+        for (int i = 1; i <= 10; i++) {
+            list.add(new ArticleFindResponse(Article.builder()
+                .id((long) i)
+                .build()));
+        }
+        return list;
+    }
+
+    private static ArticleUpdateRequest getArticleUpdateRequest() {
+        return ArticleUpdateRequest.builder()
+            .id(1L)
+            .memberId(1L)
+            .title("title")
+            .content("content")
+            .imageName("imageName")
+            .imageUUID("imageUUID")
+            .base64Image(getBase64Image())
+            .views(0)
+            .address("address")
+            .type(Type.BOARD)
+            .build();
+    }
+
+    private static ArticleSaveRequest getArticleSaveRequest() {
+
+        return ArticleSaveRequest.builder()
+            .memberId(1L)
+            .title("title")
+            .content("content")
+            .base64Image(getBase64Image())
+            .address("address")
+            .type(Type.BOARD)
+            .build();
+    }
+
+    private static Base64Image getBase64Image() {
+        return Base64Image.builder()
+            .originalName("originalName")
+            .base64File("base64File")
+            .extension("extension")
+            .build();
+    }
+
+    private static ArticleFindResponse getArticleFindResponse() {
+        return new ArticleFindResponse(Article.builder()
+            .id(1L)
+            .memberId(1L)
+            .title("title")
+            .content("content")
+            .imageName("imageName")
+            .imageUUID(UUID.randomUUID().toString())
+            .views(0)
+            .address("address")
+            .type(Type.BOARD)
+            .createdAt(LocalDateTime.now())
+            .createdBy("createdBy")
+            .updatedAt(LocalDateTime.now())
+            .updatedBy("updatedBy")
+            .build());
+    }
+}

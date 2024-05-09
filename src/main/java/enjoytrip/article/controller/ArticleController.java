@@ -147,8 +147,6 @@ public class ArticleController {
         Base64.Decoder decoder = Base64.getDecoder();
         byte[] decodedByte = decoder.decode(base64File.getBytes());
 
-        System.out.println("extension = " + extension);
-
         return new MockMultipartFile("image", fileName, extension, decodedByte);
     }
 }
