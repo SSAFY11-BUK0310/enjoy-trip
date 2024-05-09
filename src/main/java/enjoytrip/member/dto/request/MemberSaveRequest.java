@@ -1,10 +1,12 @@
 package enjoytrip.member.dto.request;
 
 import enjoytrip.member.domain.Gender;
-import java.time.LocalDateTime;
+import enjoytrip.member.domain.RoleType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
@@ -16,23 +18,20 @@ public class MemberSaveRequest {
   private Integer age;
   private Gender gender;
   private String phoneNumber;
-  private LocalDateTime createAt;
-  private LocalDateTime updatedAt;
+  private RoleType roleType;
   private String createdBy;
   private String updatedBy;
 
   @Builder
   public MemberSaveRequest(String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, LocalDateTime createAt, LocalDateTime updatedAt, String createdBy,
-      String updatedBy) {
+      String phoneNumber, RoleType roleType, String createdBy, String updatedBy) {
     this.email = email;
     this.password = password;
     this.name = name;
     this.age = age;
     this.gender = gender;
     this.phoneNumber = phoneNumber;
-    this.createAt = createAt;
-    this.updatedAt = updatedAt;
+    this.roleType = roleType;
     this.createdBy = createdBy;
     this.updatedBy = updatedBy;
   }

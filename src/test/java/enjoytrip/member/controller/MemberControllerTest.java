@@ -1,11 +1,5 @@
 package enjoytrip.member.controller;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import enjoytrip.member.domain.Gender;
@@ -16,7 +10,6 @@ import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.dto.response.MemberSaveResponse;
 import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.service.MemberService;
-import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +21,13 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import java.time.LocalDateTime;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberControllerTest {
@@ -126,7 +126,6 @@ class MemberControllerTest {
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
-        .updatedAt(LocalDateTime.now())
         .updatedBy("Test")
         .build();
   }
@@ -143,9 +142,7 @@ class MemberControllerTest {
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
-        .createAt(LocalDateTime.now())
         .createdBy("Test")
-        .updatedAt(LocalDateTime.now())
         .updatedBy("Test")
         .build();
   }

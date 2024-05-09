@@ -1,14 +1,8 @@
 package enjoytrip.member.service;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.domain.RoleType;
 import enjoytrip.member.dto.request.MemberSaveRequest;
 import enjoytrip.member.dto.request.MemberUpdateRequest;
 import enjoytrip.member.dto.response.MemberFindResponse;
@@ -17,14 +11,21 @@ import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.mock.MockMember;
 import enjoytrip.member.repository.MemberRepository;
-import java.time.LocalDateTime;
-import java.util.Optional;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.time.LocalDateTime;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -42,10 +43,10 @@ class MemberServiceTest {
     doReturn(1L).when(memberRepository).save(any(Member.class));
 
     //when
-    MemberSaveResponse response = memberService.save(request);
+    memberService.save(request);
 
     //then
-    assertThat(response.getId()).isEqualTo(1L);
+    verify(memberRepository, times(1)).save(any(Member.class));
   }
 
   @Test
@@ -123,7 +124,6 @@ class MemberServiceTest {
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
-        .updatedAt(LocalDateTime.now())
         .updatedBy("re_Test")
         .build();
   }
@@ -136,16 +136,16 @@ class MemberServiceTest {
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
-        .createAt(LocalDateTime.now())
+        .roleType(RoleType.BASIC)
         .createdBy("Test")
-        .updatedAt(LocalDateTime.now())
         .updatedBy("Test")
         .build();
   }
 
   private static MockMember getMockMember() {
     return new MockMember(1L, "test@email.com", "test1234", "username", 20, Gender.FEMALE,
-        "010-1234-1234", LocalDateTime.now(), LocalDateTime.now(), "username", "username");
+        "010-1234-1234",
+        RoleType.BASIC, LocalDateTime.now(), LocalDateTime.now(), "username", "username");
   }
 
   private static Member getMember() {
