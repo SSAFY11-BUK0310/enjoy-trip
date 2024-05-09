@@ -74,7 +74,7 @@ class MemberControllerTest {
     ;
     String responseJson = objectMapper.registerModule(new JavaTimeModule())
         .writeValueAsString(response);
-    doReturn(response).when(memberService).find(1L);
+    doReturn(response).when(memberService).findById(1L);
 
     //expected
     mockMvc.perform(MockMvcRequestBuilders.get("/members/{id}", 1L)
