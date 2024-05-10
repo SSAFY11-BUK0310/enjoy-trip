@@ -6,21 +6,18 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import enjoytrip.article.domain.Article;
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
 import enjoytrip.article.dto.form.ArticleSaveForm;
-import enjoytrip.article.dto.form.ArticleUpdateForm;
 import enjoytrip.article.dto.request.ArticleFindRequest;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
-import enjoytrip.article.dto.response.ArticleUpdateResponse;
+import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.article.util.RequestList;
 import enjoytrip.article.util.file.FileStore;
 import enjoytrip.article.util.file.UploadFile;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -75,7 +70,7 @@ class ArticleServiceTest {
     @Test
     void findSuccessTest() {
         // given
-        ArticleFindRequest request = new ArticleFindRequest(Type.BOARD, "title");
+        ArticleFindRequest request = new ArticleFindRequest(ArticleType.BOARD, "title");
         Pageable pageable = PageRequest.of(0, 5);
         List<Article> content = getArticles();
 
@@ -89,31 +84,25 @@ class ArticleServiceTest {
         Assertions.assertThat(response.getTotalElements()).isEqualTo(content.size());
     }
 
-//    @DisplayName("게시물 등록 성공")
-//    @Test
-//    void save() throws Exception {
-//
-//        // given
-//        UploadFile uploadFile = new UploadFile("fileName", "uuid");
-//
-//        ArticleSaveForm saveForm = new ArticleSaveForm(getArticleSaveRequest());
-//        Article article = Article.builder()
-//            .id(1L)
-//            .memberId(saveForm.getMemberId())
-//            .title(saveForm.getTitle())
-//            .content(saveForm.getContent())
-//            .build();
-//
-//        when(fileStore.storeFile(saveForm.getImage())).thenReturn(uploadFile);
-//        when(articleRepository.save(any(Article.class))).thenReturn(1L);
-//
-//        // when
-//        ArticleSaveResponse response = articleService.save(saveForm);
-//
-//        // then
+    @DisplayName("게시물 등록 성공")
+    @Test
+    void save() throws Exception {
+
+        // given
+        UploadFile uploadFile = new UploadFile("fileName", "uuid");
+
+        ArticleSaveForm saveForm = new ArticleSaveForm(getArticleSaveRequest());
+
+        doReturn(uploadFile).when(fileStore).storeFile(saveForm.getImage());
+        doReturn(1L).when(articleRepository).save(any(Article.class));
+
+        // when
+        ArticleSaveResponse response = articleService.save(saveForm);
+        System.out.println("response = " + response.getId());
+        // then
 //        Assertions.assertThat(response.getId()).isEqualTo(1L);
-//
-//    }
+
+    }
 
 //    @Test
 //    void update() throws Exception {
@@ -167,7 +156,7 @@ class ArticleServiceTest {
             .content("content")
             .base64Image(getBase64Image())
             .address("address")
-            .type(Type.BOARD)
+            .type(ArticleType.BOARD)
             .build();
     }
 
@@ -199,7 +188,7 @@ class ArticleServiceTest {
             .imageUUID("imageUUID")
             .address("address")
             .views(1)
-            .type(Type.BOARD)
+            .type(ArticleType.BOARD)
             .createdAt(LocalDateTime.now())
             .createdBy("createdBy")
             .updatedAt(LocalDateTime.now())

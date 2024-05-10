@@ -1,15 +1,13 @@
 package enjoytrip.article.dto.request;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
 import lombok.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor
 public class ArticleUpdateRequest {
+
     private Long id;
     private Long memberId;
     private String title;
@@ -19,11 +17,12 @@ public class ArticleUpdateRequest {
     private Base64Image base64Image;
     private Integer views;
     private String address;
-    private Type type;
+    private ArticleType articleType;
 
     @Builder
-    public ArticleUpdateRequest(Long id, Long memberId, String title, String content, String imageName, String imageUUID, Base64Image base64Image, Integer views,
-                              String address, Type type) {
+    public ArticleUpdateRequest(Long id, Long memberId, String title, String content,
+        String imageName, String imageUUID, Base64Image base64Image, Integer views,
+        String address, ArticleType articleType) {
         this.id = id;
         this.memberId = memberId;
         this.title = title;
@@ -33,6 +32,6 @@ public class ArticleUpdateRequest {
         this.base64Image = base64Image;
         this.views = views;
         this.address = address;
-        this.type = type;
+        this.articleType = articleType;
     }
 }

@@ -1,10 +1,9 @@
 package enjoytrip.article.controller;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
 import enjoytrip.article.dto.form.ArticleSaveForm;
 import enjoytrip.article.dto.form.ArticleUpdateForm;
-import enjoytrip.article.dto.request.ArticleFindRequest;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
@@ -38,10 +37,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*", methods = {
     RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT,
     RequestMethod.HEAD, RequestMethod.OPTIONS})
 @Slf4j
@@ -83,12 +83,13 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findByPage(@RequestBody ArticleFindRequest request,
+    public ResponseEntity<?> findByPage(@RequestParam ArticleType articleType,
+        @RequestParam String title,
         @PageableDefault(size = 5, page = 0) Pageable pageable) {
-        if (!isValidType(request.getType())) {
+        if (!isValidType(articleType)) {
             throw new ArticleTypeMismatchException();
         }
-        return ResponseEntity.ok(articleService.findByPage(request, pageable));
+        return ResponseEntity.ok(articleService.findByPage(articleType, title, pageable));
     }
 
     @GetMapping(value = "/{id}")
@@ -135,8 +136,8 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    public static boolean isValidType(Type type) {
-        return Type.TOUR == type || Type.BOARD == type;
+    public static boolean isValidType(ArticleType articleType) {
+        return ArticleType.TOUR == articleType || ArticleType.BOARD == articleType;
     }
 
     private MultipartFile getMultipartFile(Base64Image base64Image) {

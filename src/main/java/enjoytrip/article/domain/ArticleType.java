@@ -1,5 +1,5 @@
 package enjoytrip.article.domain;
 
-public enum Type {
+public enum ArticleType {
     TOUR, BOARD;
 }

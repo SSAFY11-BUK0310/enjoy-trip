@@ -1,6 +1,6 @@
 package enjoytrip.article.util;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.data.domain.Pageable;
@@ -8,13 +8,14 @@ import org.springframework.data.domain.Pageable;
 
 @Data
 public class RequestList {
-    private Type type;
+
+    private ArticleType articleType;
     private String title;
     private Pageable pageable;
 
     @Builder
-    public RequestList(Type type, String title, Pageable pageable) {
-        this.type = type;
+    public RequestList(ArticleType articleType, String title, Pageable pageable) {
+        this.articleType = articleType;
         this.title = title;
         this.pageable = pageable;
     }

@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import enjoytrip.article.domain.Article;
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
 import enjoytrip.article.dto.form.ArticleSaveForm;
 import enjoytrip.article.dto.form.ArticleUpdateForm;
@@ -71,7 +71,7 @@ class ArticleControllerTest {
     void findByPageSuccessTest() throws Exception {
         // given
         Pageable pageable = PageRequest.of(0, 10);
-        ArticleFindRequest request = new ArticleFindRequest(Type.BOARD, "title");
+        ArticleFindRequest request = new ArticleFindRequest(ArticleType.BOARD, "title");
 
         List<ArticleFindResponse> list = getArticleFindResponses();
         Page<ArticleFindResponse> response = new PageImpl<>(list, pageable, 0);
@@ -194,7 +194,7 @@ class ArticleControllerTest {
             .base64Image(getBase64Image())
             .views(0)
             .address("address")
-            .type(Type.BOARD)
+            .type(ArticleType.BOARD)
             .build();
     }
 
@@ -206,7 +206,7 @@ class ArticleControllerTest {
             .content("content")
             .base64Image(getBase64Image())
             .address("address")
-            .type(Type.BOARD)
+            .type(ArticleType.BOARD)
             .build();
     }
 
@@ -228,7 +228,7 @@ class ArticleControllerTest {
             .imageUUID(UUID.randomUUID().toString())
             .views(0)
             .address("address")
-            .type(Type.BOARD)
+            .type(ArticleType.BOARD)
             .createdAt(LocalDateTime.now())
             .createdBy("createdBy")
             .updatedAt(LocalDateTime.now())

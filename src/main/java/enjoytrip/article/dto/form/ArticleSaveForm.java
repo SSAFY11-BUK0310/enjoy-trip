@@ -1,10 +1,7 @@
 package enjoytrip.article.dto.form;
 
-import enjoytrip.article.domain.Type;
-import enjoytrip.article.dto.Base64Image;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
-import java.time.LocalDateTime;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.web.multipart.MultipartFile;
@@ -18,14 +15,14 @@ public class ArticleSaveForm {
     private String content;
     private MultipartFile image;
     private String address;
-    private Type type;
+    private ArticleType articleType;
 
     public ArticleSaveForm(ArticleSaveRequest request) {
         this.memberId = request.getMemberId();
         this.title = request.getTitle();
         this.content = request.getContent();
         this.address = request.getAddress();
-        this.type = request.getType();
+        this.articleType = request.getArticleType();
     }
 
     public void addImage(MultipartFile image) {

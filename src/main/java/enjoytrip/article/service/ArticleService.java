@@ -1,6 +1,7 @@
 package enjoytrip.article.service;
 
 import enjoytrip.article.domain.Article;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.form.ArticleSaveForm;
 import enjoytrip.article.dto.form.ArticleUpdateForm;
 import enjoytrip.article.dto.request.ArticleFindRequest;
@@ -35,17 +36,17 @@ public class ArticleService {
     private final FileStore fileStore;
 
 
-    public Page<ArticleFindResponse> findByPage(ArticleFindRequest request,
+    public Page<ArticleFindResponse> findByPage(ArticleType articleType, String title,
         Pageable pageable) {
         RequestList requestList = RequestList.builder()
-            .type(request.getType())
-            .title(request.getTitle())
+            .articleType(articleType)
+            .title(title)
             .pageable(pageable)
             .build();
 
         int total = articleRepository.count(Article.builder()
-            .type(request.getType())
-            .title(request.getTitle())
+            .articleType(articleType)
+            .title(title)
             .build());
 
         List<Article> content = articleRepository.findByPage(requestList);
@@ -75,7 +76,7 @@ public class ArticleService {
             .content(articleSaveForm.getContent())
             .imageName(uploadFile.getUploadFileName())
             .imageUUID(uploadFile.getUploadFileUUID())
-            .type(articleSaveForm.getType())
+            .articleType(articleSaveForm.getArticleType())
             .views(0)
             .address(articleSaveForm.getAddress())
             .createdAt(LocalDateTime.now())
@@ -111,7 +112,7 @@ public class ArticleService {
             .imageUUID(articleUpdateForm.getImageUUID())
             .views(articleUpdateForm.getViews())
             .address(articleUpdateForm.getAddress())
-            .type(articleUpdateForm.getType())
+            .articleType(articleUpdateForm.getArticleType())
             .updatedAt(LocalDateTime.now())
             .updatedBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();

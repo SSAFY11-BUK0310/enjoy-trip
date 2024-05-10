@@ -1,6 +1,6 @@
 package enjoytrip.article.dto.form;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 @Getter
 @NoArgsConstructor
 public class ArticleUpdateForm {
+
     private Long id;
     private Long memberId;
     private String title;
@@ -18,7 +19,7 @@ public class ArticleUpdateForm {
     private MultipartFile image;
     private Integer views;
     private String address;
-    private Type type;
+    private ArticleType articleType;
 
     public ArticleUpdateForm(ArticleUpdateRequest request) {
         this.id = request.getId();
@@ -29,7 +30,7 @@ public class ArticleUpdateForm {
         this.imageUUID = request.getImageUUID();
         this.views = request.getViews();
         this.address = request.getAddress();
-        this.type = request.getType();
+        this.articleType = request.getArticleType();
     }
 
     public void addImage(MultipartFile image) {

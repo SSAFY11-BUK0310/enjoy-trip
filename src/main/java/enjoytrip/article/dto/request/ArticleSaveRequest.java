@@ -1,6 +1,6 @@
 package enjoytrip.article.dto.request;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,16 +15,16 @@ public class ArticleSaveRequest {
     private String content;
     private Base64Image base64Image;
     private String address;
-    private Type type;
+    private ArticleType articleType;
 
     @Builder
     public ArticleSaveRequest(Long memberId, String title, String content, Base64Image base64Image,
-        String address, Type type) {
+        String address, ArticleType articleType) {
         this.memberId = memberId;
         this.title = title;
         this.content = content;
         this.base64Image = base64Image;
         this.address = address;
-        this.type = type;
+        this.articleType = articleType;
     }
 }

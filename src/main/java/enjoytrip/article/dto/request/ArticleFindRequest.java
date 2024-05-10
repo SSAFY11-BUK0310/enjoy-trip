@@ -1,12 +1,13 @@
 package enjoytrip.article.dto.request;
 
-import enjoytrip.article.domain.Type;
+import enjoytrip.article.domain.ArticleType;
 import lombok.*;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class ArticleFindRequest {
-    private Type type;
+
+    private ArticleType articleType;
     private String title;
 }
