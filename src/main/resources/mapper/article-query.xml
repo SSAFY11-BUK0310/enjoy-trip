@@ -3,6 +3,16 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="enjoytrip.article.repository.ArticleRepository">
 
+  <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
+    keyProperty="id">
+    insert into article(member_id, title, content, image_name, image_uuid, views, type,
+                        address, created_at,
+                        created_by, updated_at, updated_by)
+    values (#{memberId}, #{title}, #{content}, #{imageName}, #{imageUUID}, #{views}, #{articleType},
+            #{address},
+            #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
+  </insert>
+
   <select id="findByPage" parameterType="map"
     resultType="enjoytrip.article.domain.Article">
     select id, member_id, title, content, image_name, image_uuid, views, address, type,
@@ -54,15 +64,6 @@
     where id = #{id}
   </select>
 
-  <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
-    keyProperty="id">
-    insert into article(member_id, title, content, image_name, image_uuid, views, type,
-                        address, created_at,
-                        created_by, updated_at, updated_by)
-    values (#{memberId}, #{title}, #{content}, #{imageName}, #{imageUUID}, #{views}, #{articleType},
-            #{address},
-            #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
-  </insert>
 
   <update id="update" parameterType="enjoytrip.article.domain.Article">
     update article

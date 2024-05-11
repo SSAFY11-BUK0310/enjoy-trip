@@ -36,20 +36,6 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final FileStore fileStore;
 
-    public Page<ArticleFindResponse> findByPage(ArticleType articleType, String title,
-        Pageable pageable) {
-        int total = articleRepository.count(articleType, title);
-        List<Article> content = articleRepository.findByPage(articleType, title, pageable);
-        List<ArticleFindResponse> articleFindResponseList = getArticleFindResponseList(content);
-        return new PageImpl<>(articleFindResponseList, pageable, total);
-    }
-
-    public ArticleFindResponse findById(Long id) {
-        Article findArticle = articleRepository.findById(id)
-            .orElseThrow(ArticleNotFoundException::new);
-        return new ArticleFindResponse(findArticle);
-    }
-
     public ArticleSaveResponse save(ArticleSaveRequest request)
         throws Exception {
 
@@ -83,6 +69,20 @@ public class ArticleService {
             throw new ArticleSaveException();
         }
         return new ArticleSaveResponse(newArticle.getId());
+    }
+
+    public Page<ArticleFindResponse> findByPage(ArticleType articleType, String title,
+        Pageable pageable) {
+        int total = articleRepository.count(articleType, title);
+        List<Article> content = articleRepository.findByPage(articleType, title, pageable);
+        List<ArticleFindResponse> articleFindResponseList = getArticleFindResponseList(content);
+        return new PageImpl<>(articleFindResponseList, pageable, total);
+    }
+
+    public ArticleFindResponse findById(Long id) {
+        Article findArticle = articleRepository.findById(id)
+            .orElseThrow(ArticleNotFoundException::new);
+        return new ArticleFindResponse(findArticle);
     }
 
     public ArticleUpdateResponse update(ArticleUpdateRequest request)

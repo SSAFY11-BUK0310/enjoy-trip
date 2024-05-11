@@ -11,6 +11,8 @@ import org.springframework.data.domain.Pageable;
 @Mapper
 public interface ArticleRepository {
 
+    Long save(Article article);
+
     List<Article> findByPage(@Param("articleType") ArticleType articleType,
         @Param("title") String title, @Param("pageable") Pageable pageable);
 
@@ -18,7 +20,6 @@ public interface ArticleRepository {
 
     Optional<Article> findById(Long id);
 
-    Long save(Article article);
 
     Long update(Article article);
 

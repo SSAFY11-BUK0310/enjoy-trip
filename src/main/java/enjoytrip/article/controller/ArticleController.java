@@ -68,6 +68,12 @@ public class ArticleController {
         return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
     }
 
+    @PostMapping(consumes = "application/json")
+    public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)
+        throws Exception {
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.save(request));
+    }
+
     @GetMapping
     public ResponseEntity<Page<ArticleFindResponse>> findByPage(
         @RequestParam("articleType") ArticleType articleType, @RequestParam("title") String title,
@@ -83,12 +89,6 @@ public class ArticleController {
     @GetMapping("/{fileName}/images")
     public Resource file(@PathVariable String fileName) throws MalformedURLException {
         return new UrlResource("file:" + fileStore.getFullPath(fileName));
-    }
-
-    @PostMapping(consumes = "application/json")
-    public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)
-        throws Exception {
-        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.save(request));
     }
 
     @PutMapping(value = "/{id}", consumes = "application/json")
