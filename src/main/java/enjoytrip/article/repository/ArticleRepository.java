@@ -1,20 +1,27 @@
 package enjoytrip.article.repository;
 
 import enjoytrip.article.domain.Article;
-import enjoytrip.article.dto.request.ArticleFindRequest;
-import enjoytrip.article.util.RequestList;
-import org.apache.ibatis.annotations.Mapper;
-
+import enjoytrip.article.domain.ArticleType;
 import java.util.List;
 import java.util.Optional;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.springframework.data.domain.Pageable;
 
 @Mapper
 public interface ArticleRepository {
-    List<Article> findByPage(RequestList requestList);
-    Integer count(Article article);
+
+    List<Article> findByPage(@Param("articleType") ArticleType articleType,
+        @Param("title") String title, @Param("pageable") Pageable pageable);
+
+    Integer count(@Param("articleType") ArticleType articleType, @Param("title") String title);
+
     Optional<Article> findById(Long id);
+
     Long save(Article article);
+
     Long update(Article article);
+
     void delete(Long id);
 
 }

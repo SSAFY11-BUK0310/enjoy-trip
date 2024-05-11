@@ -2,7 +2,9 @@ package enjoytrip.article.dto.request;
 
 import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
@@ -33,5 +35,13 @@ public class ArticleUpdateRequest {
         this.views = views;
         this.address = address;
         this.articleType = articleType;
+    }
+
+    public void addImageName(String imageName) {
+        this.imageName = imageName;
+    }
+
+    public void addImageUUID(String imageUUID) {
+        this.imageUUID = imageUUID;
     }
 }

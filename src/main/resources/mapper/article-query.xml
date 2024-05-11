@@ -3,7 +3,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="enjoytrip.article.repository.ArticleRepository">
 
-  <select id="findByPage" parameterType="enjoytrip.article.util.RequestList"
+  <select id="findByPage" parameterType="map"
     resultType="enjoytrip.article.domain.Article">
     select id, member_id, title, content, image_name, image_uuid, views, address, type,
     created_at, updated_at, created_by, updated_by
@@ -26,7 +26,7 @@
 
   </select>
 
-  <select id="count" parameterType="enjoytrip.article.domain.Article">
+  <select id="count" parameterType="map">
     select count(type)
     from article
     where type=#{articleType}
@@ -35,6 +35,7 @@
     </if>
 
   </select>
+
   <select id="findById" parameterType="long" resultType="enjoytrip.article.domain.Article">
     select id,
            member_id,
@@ -52,6 +53,7 @@
     from article
     where id = #{id}
   </select>
+
   <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
     keyProperty="id">
     insert into article(member_id, title, content, image_name, image_uuid, views, type,
@@ -61,8 +63,8 @@
             #{address},
             #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
   </insert>
-  <update id="update" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
-    keyProperty="id">
+
+  <update id="update" parameterType="enjoytrip.article.domain.Article">
     update article
     set member_id  = #{memberId},
         title      = #{title},
@@ -76,6 +78,7 @@
         updated_by = #{updatedBy}
     where id = #{id};
   </update>
+
   <delete id="delete" parameterType="long">
     delete
     from article

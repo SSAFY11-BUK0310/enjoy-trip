@@ -2,9 +2,9 @@ package enjoytrip.article.service;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
-import enjoytrip.article.dto.form.ArticleSaveForm;
-import enjoytrip.article.dto.form.ArticleUpdateForm;
-import enjoytrip.article.dto.request.ArticleFindRequest;
+import enjoytrip.article.dto.Base64Image;
+import enjoytrip.article.dto.request.ArticleSaveRequest;
+import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
@@ -12,19 +12,20 @@ import enjoytrip.article.exception.ArticleNotFoundException;
 import enjoytrip.article.exception.ArticleSaveException;
 import enjoytrip.article.exception.ArticleUpdateException;
 import enjoytrip.article.repository.ArticleRepository;
-import enjoytrip.article.util.RequestList;
 import enjoytrip.article.util.file.FileStore;
 import enjoytrip.article.util.file.UploadFile;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Service;
-
+import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @Service
@@ -35,22 +36,10 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final FileStore fileStore;
 
-
     public Page<ArticleFindResponse> findByPage(ArticleType articleType, String title,
         Pageable pageable) {
-        RequestList requestList = RequestList.builder()
-            .articleType(articleType)
-            .title(title)
-            .pageable(pageable)
-            .build();
-
-        int total = articleRepository.count(Article.builder()
-            .articleType(articleType)
-            .title(title)
-            .build());
-
-        List<Article> content = articleRepository.findByPage(requestList);
-        log.info("content={}", content.size());
+        int total = articleRepository.count(articleType, title);
+        List<Article> content = articleRepository.findByPage(articleType, title, pageable);
         List<ArticleFindResponse> articleFindResponseList = getArticleFindResponseList(content);
         return new PageImpl<>(articleFindResponseList, pageable, total);
     }
@@ -61,24 +50,30 @@ public class ArticleService {
         return new ArticleFindResponse(findArticle);
     }
 
-    public ArticleSaveResponse save(ArticleSaveForm articleSaveForm) throws Exception {
+    public ArticleSaveResponse save(ArticleSaveRequest request)
+        throws Exception {
+
+        MultipartFile image = null;
+        if (request.getBase64Image() != null) {
+            image = getMultipartFile(request.getBase64Image());
+        }
 
         // imageUUID 생성, 이미지 저장.
-        UploadFile uploadFile = fileStore.storeFile(articleSaveForm.getImage());
+        UploadFile uploadFile = fileStore.storeFile(image);
         // uploadFile이 null이면 default image 넣어주자.
         if (uploadFile == null) {
             uploadFile = new UploadFile(NO_IMAGE_PNG, NO_IMAGE_PNG);
         }
 
         Article newArticle = Article.builder()
-            .memberId(articleSaveForm.getMemberId())
-            .title(articleSaveForm.getTitle())
-            .content(articleSaveForm.getContent())
+            .memberId(request.getMemberId())
+            .title(request.getTitle())
+            .content(request.getContent())
             .imageName(uploadFile.getUploadFileName())
             .imageUUID(uploadFile.getUploadFileUUID())
-            .articleType(articleSaveForm.getArticleType())
+            .articleType(request.getArticleType())
             .views(0)
-            .address(articleSaveForm.getAddress())
+            .address(request.getAddress())
             .createdAt(LocalDateTime.now())
             .createdBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
@@ -90,32 +85,39 @@ public class ArticleService {
         return new ArticleSaveResponse(newArticle.getId());
     }
 
-    public ArticleUpdateResponse update(ArticleUpdateForm articleUpdateForm) throws Exception {
+    public ArticleUpdateResponse update(ArticleUpdateRequest request)
+        throws Exception {
+
+        MultipartFile image = null;
+        if (request.getBase64Image() != null) {
+            image = getMultipartFile(request.getBase64Image());
+        }
 
         // update할 이미지가 있다면 기존 이미지 삭제(no_image.png 제외)
         // 새로운 이미지에 대한 UUID 만들고 저장
-        if (articleUpdateForm.getImage() != null) {
-            if (!NO_IMAGE_PNG.equals(articleUpdateForm.getImageUUID())) {
-                fileStore.deleteFile(articleUpdateForm.getImageUUID());
+        if (image != null) {
+            if (!NO_IMAGE_PNG.equals(request.getImageUUID())) {
+                fileStore.deleteFile(request.getImageUUID());
             }
-            UploadFile uploadFile = fileStore.storeFile(articleUpdateForm.getImage());
-            articleUpdateForm.addImageName(uploadFile.getUploadFileName());
-            articleUpdateForm.addImageUUID(uploadFile.getUploadFileUUID());
+            UploadFile uploadFile = fileStore.storeFile(image);
+            request.addImageName(uploadFile.getUploadFileName());
+            request.addImageUUID(uploadFile.getUploadFileUUID());
         }
 
         Article newArticle = Article.builder()
-            .id(articleUpdateForm.getId())
-            .memberId(articleUpdateForm.getMemberId())
-            .title(articleUpdateForm.getTitle())
-            .content(articleUpdateForm.getContent())
-            .imageName(articleUpdateForm.getImageName())
-            .imageUUID(articleUpdateForm.getImageUUID())
-            .views(articleUpdateForm.getViews())
-            .address(articleUpdateForm.getAddress())
-            .articleType(articleUpdateForm.getArticleType())
+            .id(request.getId())
+            .memberId(request.getMemberId())
+            .title(request.getTitle())
+            .content(request.getContent())
+            .imageName(request.getImageName())
+            .imageUUID(request.getImageUUID())
+            .views(request.getViews())
+            .address(request.getAddress())
+            .articleType(request.getArticleType())
             .updatedAt(LocalDateTime.now())
             .updatedBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
+
         Long result = articleRepository.update(newArticle);
         if (result == 0) {
             throw new ArticleUpdateException();
@@ -137,5 +139,16 @@ public class ArticleService {
             articleFindResponseList.add(new ArticleFindResponse(article));
         }
         return articleFindResponseList;
+    }
+
+    private MultipartFile getMultipartFile(Base64Image base64Image) {
+        String fileName = base64Image.getOriginalName();
+        String base64File = base64Image.getBase64File();
+        String extension = base64Image.getExtension();
+
+        Base64.Decoder decoder = Base64.getDecoder();
+        byte[] decodedByte = decoder.decode(base64File.getBytes());
+
+        return new MockMultipartFile("image", fileName, extension, decodedByte);
     }
 }

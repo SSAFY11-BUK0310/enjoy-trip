@@ -1,11 +1,10 @@
 package enjoytrip.article.domain;
 
 import enjoytrip.global.BaseEntity;
+import java.time.LocalDateTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
-
-import java.time.LocalDateTime;
 
 /**
  * DOMAIN : 실제 DB의 테이블과 매칭시키는 클래스.

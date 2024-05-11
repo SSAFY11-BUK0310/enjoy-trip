@@ -1,12 +1,13 @@
 package enjoytrip.article.util.file;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Data
+@Getter
 @NoArgsConstructor
 public class UploadFile {
+
     private String uploadFileName;
     private String uploadFileUUID;
 

@@ -1,9 +1,6 @@
 package enjoytrip.article.controller;
 
 import enjoytrip.article.domain.ArticleType;
-import enjoytrip.article.dto.Base64Image;
-import enjoytrip.article.dto.form.ArticleSaveForm;
-import enjoytrip.article.dto.form.ArticleUpdateForm;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
@@ -11,22 +8,20 @@ import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.exception.ArticleNotFoundException;
 import enjoytrip.article.exception.ArticleSaveException;
-import enjoytrip.article.exception.ArticleTypeMismatchException;
 import enjoytrip.article.exception.ArticleUpdateException;
 import enjoytrip.article.service.ArticleService;
 import enjoytrip.article.util.file.FileStore;
 import enjoytrip.global.ErrorResult;
 import java.net.MalformedURLException;
-import java.util.Base64;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,7 +34,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true", allowedHeaders = "*", methods = {
     RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PUT,
@@ -61,14 +55,6 @@ public class ArticleController {
     }
 
     @ExceptionHandler //TODO : 예외 공통 처리 대상
-    public ResponseEntity<ErrorResult> articleTypeMismatchExceptionHandler(
-        ArticleTypeMismatchException e) {
-        log.error("[exceptionHandle] ex", e);
-        ErrorResult errorResult = new ErrorResult(400, "ARTICLE-TYPE-MISMATCH-EX", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler //TODO : 예외 공통 처리 대상
     public ResponseEntity<ErrorResult> articleSaveExceptionHandler(ArticleSaveException e) {
         log.error("[exceptionHandle] ex", e);
         ErrorResult errorResult = new ErrorResult(400, "ARTICLE-SAVE-EX", e.getMessage());
@@ -83,19 +69,15 @@ public class ArticleController {
     }
 
     @GetMapping
-    public ResponseEntity<?> findByPage(@RequestParam ArticleType articleType,
-        @RequestParam String title,
+    public ResponseEntity<Page<ArticleFindResponse>> findByPage(
+        @RequestParam("articleType") ArticleType articleType, @RequestParam("title") String title,
         @PageableDefault(size = 5, page = 0) Pageable pageable) {
-        if (!isValidType(articleType)) {
-            throw new ArticleTypeMismatchException();
-        }
         return ResponseEntity.ok(articleService.findByPage(articleType, title, pageable));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ArticleFindResponse> findById(@PathVariable("id") Long id) {
-        ArticleFindResponse findArticleResponse = articleService.findById(id);
-        return ResponseEntity.status(HttpStatus.OK).body(findArticleResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(articleService.findById(id));
     }
 
     @GetMapping("/{fileName}/images")
@@ -106,48 +88,20 @@ public class ArticleController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)
         throws Exception {
-        ArticleSaveForm saveForm = new ArticleSaveForm(request);
-        if (request.getBase64Image() != null) {
-            MultipartFile image = getMultipartFile(request.getBase64Image());
-            saveForm.addImage(image);
-        }
-        ArticleSaveResponse articleSaveResponse = articleService.save(saveForm);
-        return ResponseEntity.status(HttpStatus.CREATED).body(articleSaveResponse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(articleService.save(request));
     }
 
-    @PutMapping(value = "/{id}")
+    @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity<ArticleUpdateResponse> update(@RequestBody ArticleUpdateRequest request)
         throws Exception {
-        ArticleUpdateForm updateForm = new ArticleUpdateForm(request);
-        if (request.getBase64Image() != null) {
-            MultipartFile image = getMultipartFile(request.getBase64Image());
-            updateForm.addImage(image);
-        }
-
-        ArticleUpdateResponse articleUpdateResponse = articleService.update(updateForm);
-
-        return ResponseEntity.status(HttpStatus.OK).body(articleUpdateResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(articleService.update(request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
         articleService.delete(id);
         //204(No Content) : 작업이 수행되었으며 별도로 내용을 반환할게 없을 때.
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    public static boolean isValidType(ArticleType articleType) {
-        return ArticleType.TOUR == articleType || ArticleType.BOARD == articleType;
-    }
-
-    private MultipartFile getMultipartFile(Base64Image base64Image) {
-        String fileName = base64Image.getOriginalName();
-        String base64File = base64Image.getBase64File();
-        String extension = base64Image.getExtension();
-
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] decodedByte = decoder.decode(base64File.getBytes());
-
-        return new MockMultipartFile("image", fileName, extension, decodedByte);
-    }
 }
