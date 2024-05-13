@@ -1,4 +1,4 @@
-package enjoytrip.global;
+package enjoytrip.global.domain;
 
 import java.time.LocalDateTime;
 import lombok.Getter;

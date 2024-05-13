@@ -1,11 +1,16 @@
 package enjoytrip.article.exception;
 
-public class ArticleUpdateException extends RuntimeException {
+import enjoytrip.global.exception.BusinessException;
+import enjoytrip.global.exception.ErrorCode;
 
-    public static final String MESSAGE = "갱신에 실패했습니다.";
+public class ArticleUpdateException extends BusinessException {
 
-    public ArticleUpdateException() {
-        super(MESSAGE);
+    public ArticleUpdateException(ErrorCode errorCode, String message) {
+        super(errorCode, message);
+    }
+
+    public ArticleUpdateException(ErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
     }
 
 }

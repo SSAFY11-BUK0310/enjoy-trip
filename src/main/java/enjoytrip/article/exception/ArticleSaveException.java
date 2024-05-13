@@ -1,11 +1,16 @@
 package enjoytrip.article.exception;
 
-public class ArticleSaveException extends RuntimeException {
+import enjoytrip.global.exception.BusinessException;
+import enjoytrip.global.exception.ErrorCode;
 
-    public static final String MESSAGE = "등록을 실패했습니다.";
+public class ArticleSaveException extends BusinessException {
 
-    public ArticleSaveException() {
-        super(MESSAGE);
+    public ArticleSaveException(ErrorCode errorCode, String message) {
+        super(errorCode, message);
+    }
+
+    public ArticleSaveException(ErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
     }
 
 }

@@ -6,12 +6,8 @@ import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
-import enjoytrip.article.exception.ArticleNotFoundException;
-import enjoytrip.article.exception.ArticleSaveException;
-import enjoytrip.article.exception.ArticleUpdateException;
 import enjoytrip.article.service.ArticleService;
 import enjoytrip.article.util.file.FileStore;
-import enjoytrip.global.ErrorResult;
 import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,26 +42,6 @@ public class ArticleController {
     private final ArticleService articleService;
     private final FileStore fileStore;
 
-    @ExceptionHandler //TODO : 예외 공통 처리 대상
-    public ResponseEntity<ErrorResult> articleNotFoundExceptionHandler(ArticleNotFoundException e) {
-        log.error("[exceptionHandle] ex", e);
-        ErrorResult errorResult = new ErrorResult(400, "ARTICLE-FIND-EX", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler //TODO : 예외 공통 처리 대상
-    public ResponseEntity<ErrorResult> articleSaveExceptionHandler(ArticleSaveException e) {
-        log.error("[exceptionHandle] ex", e);
-        ErrorResult errorResult = new ErrorResult(400, "ARTICLE-SAVE-EX", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler //TODO : 예외 공통 처리 대상
-    public ResponseEntity<ErrorResult> articleUpdateExceptionHandler(ArticleUpdateException e) {
-        log.error("[exceptionHandle] ex", e);
-        ErrorResult errorResult = new ErrorResult(400, "ARTICLE-UPDATE-EX", e.getMessage());
-        return new ResponseEntity<>(errorResult, HttpStatus.BAD_REQUEST);
-    }
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)

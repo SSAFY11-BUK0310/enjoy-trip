@@ -1,5 +1,9 @@
 package enjoytrip.article.service;
 
+import static enjoytrip.global.exception.ErrorCode.ARTICLE_NOT_FOUND;
+import static enjoytrip.global.exception.ErrorCode.ARTICLE_SAVE_FAILED;
+import static enjoytrip.global.exception.ErrorCode.ARTICLE_UPDATE_FAILED;
+
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
 import enjoytrip.article.dto.Base64Image;
@@ -36,8 +40,7 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final FileStore fileStore;
 
-    public ArticleSaveResponse save(ArticleSaveRequest request)
-        throws Exception {
+    public ArticleSaveResponse save(ArticleSaveRequest request) throws Exception {
 
         MultipartFile image = null;
         if (request.getBase64Image() != null) {
@@ -51,22 +54,17 @@ public class ArticleService {
             uploadFile = new UploadFile(NO_IMAGE_PNG, NO_IMAGE_PNG);
         }
 
-        Article newArticle = Article.builder()
-            .memberId(request.getMemberId())
-            .title(request.getTitle())
-            .content(request.getContent())
-            .imageName(uploadFile.getUploadFileName())
-            .imageUUID(uploadFile.getUploadFileUUID())
-            .articleType(request.getArticleType())
-            .views(0)
-            .address(request.getAddress())
+        Article newArticle = Article.builder().memberId(request.getMemberId())
+            .title(request.getTitle()).content(request.getContent())
+            .imageName(uploadFile.getUploadFileName()).imageUUID(uploadFile.getUploadFileUUID())
+            .articleType(request.getArticleType()).views(0).address(request.getAddress())
             .createdAt(LocalDateTime.now())
             .createdBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
 
         Long result = articleRepository.save(newArticle);
         if (result == 0) {
-            throw new ArticleSaveException();
+            throw new ArticleSaveException(ARTICLE_SAVE_FAILED, "cannot register new article");
         }
         return new ArticleSaveResponse(newArticle.getId());
     }
@@ -80,13 +78,12 @@ public class ArticleService {
     }
 
     public ArticleFindResponse findById(Long id) {
-        Article findArticle = articleRepository.findById(id)
-            .orElseThrow(ArticleNotFoundException::new);
+        Article findArticle = articleRepository.findById(id).orElseThrow(
+            () -> new ArticleNotFoundException(ARTICLE_NOT_FOUND, "does not exist article"));
         return new ArticleFindResponse(findArticle);
     }
 
-    public ArticleUpdateResponse update(ArticleUpdateRequest request)
-        throws Exception {
+    public ArticleUpdateResponse update(ArticleUpdateRequest request) throws Exception {
 
         MultipartFile image = null;
         if (request.getBase64Image() != null) {
@@ -104,23 +101,17 @@ public class ArticleService {
             request.addImageUUID(uploadFile.getUploadFileUUID());
         }
 
-        Article newArticle = Article.builder()
-            .id(request.getId())
-            .memberId(request.getMemberId())
-            .title(request.getTitle())
-            .content(request.getContent())
-            .imageName(request.getImageName())
-            .imageUUID(request.getImageUUID())
-            .views(request.getViews())
-            .address(request.getAddress())
-            .articleType(request.getArticleType())
-            .updatedAt(LocalDateTime.now())
+        Article newArticle = Article.builder().id(request.getId()).memberId(request.getMemberId())
+            .title(request.getTitle()).content(request.getContent())
+            .imageName(request.getImageName()).imageUUID(request.getImageUUID())
+            .views(request.getViews()).address(request.getAddress())
+            .articleType(request.getArticleType()).updatedAt(LocalDateTime.now())
             .updatedBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
 
         Long result = articleRepository.update(newArticle);
         if (result == 0) {
-            throw new ArticleUpdateException();
+            throw new ArticleUpdateException(ARTICLE_UPDATE_FAILED, "cannot update article");
         }
         return new ArticleUpdateResponse(newArticle.getId());
     }

@@ -1,11 +1,16 @@
 package enjoytrip.article.exception;
 
-public class ArticleNotFoundException extends RuntimeException {
+import enjoytrip.global.exception.BusinessException;
+import enjoytrip.global.exception.ErrorCode;
 
-    public static final String MESSAGE = "게시물을 찾지 못했습니다.";
+public class ArticleNotFoundException extends BusinessException {
 
-    public ArticleNotFoundException() {
-        super(MESSAGE);
+    public ArticleNotFoundException(ErrorCode errorCode, String message) {
+        super(errorCode, message);
     }
 
+    public ArticleNotFoundException(ErrorCode errorCode, String message, Throwable cause) {
+        super(errorCode, message, cause);
+    }
+    
 }
