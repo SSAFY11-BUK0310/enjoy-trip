@@ -2,9 +2,9 @@ package enjoytrip.member.dto.response;
 
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
-import lombok.Getter;
-
+import enjoytrip.member.domain.RoleType;
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 public class MemberFindResponse {
@@ -15,6 +15,7 @@ public class MemberFindResponse {
   private String name;
   private Integer age;
   private Gender gender;
+  private RoleType type;
   private String phoneNumber;
   private LocalDateTime createdAt;
   private String createdBy;
@@ -26,6 +27,7 @@ public class MemberFindResponse {
     this.name = member.getName();
     this.age = member.getAge();
     this.gender = member.getGender();
+    this.type = member.getRoleType();
     this.phoneNumber = member.getPhoneNumber();
     this.createdAt = member.getCreatedAt();
     this.createdBy = member.getCreatedBy();

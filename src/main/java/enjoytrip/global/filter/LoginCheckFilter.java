@@ -2,6 +2,9 @@ package enjoytrip.global.filter;
 
 import static enjoytrip.global.constant.SessionConstant.LOGIN_USER_ID;
 import static enjoytrip.global.exception.ErrorCode.LOGIN_FAILED;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.util.PatternMatchUtils.simpleMatch;
 
 import enjoytrip.global.exception.AuthException;
@@ -16,10 +19,9 @@ import java.io.IOException;
 
 public class LoginCheckFilter implements Filter {
 
-  private static final String homeMethod = "GET";
   private static final String homePath = "/";
-  private static final String loginMethod = "POST";
   private static final String loginPath = "/login";
+  private static final String joinPath = "/members";
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -33,19 +35,30 @@ public class LoginCheckFilter implements Filter {
   }
 
   private static boolean isRequiredAuth(HttpServletRequest request) {
-    return !(isHomeURI(request) || isLoginURI(request));
+    return !(isHomeURI(request) || isLoginURI(request) || isJoinURI(request) || isPreflight(
+        request));
   }
 
   private static boolean isHomeURI(HttpServletRequest request) {
-    boolean isHomeMethod = request.getMethod().equals(homeMethod);
+    boolean isHomeMethod = request.getMethod().equals(GET.name());
     boolean isHomePath = simpleMatch(request.getRequestURI(), homePath);
     return isHomeMethod && isHomePath;
   }
 
   private static boolean isLoginURI(HttpServletRequest request) {
-    boolean isLoginMethod = request.getMethod().equals(loginMethod);
+    boolean isLoginMethod = request.getMethod().equals(POST.name());
     boolean isLoginPath = simpleMatch(request.getRequestURI(), loginPath);
     return isLoginMethod && isLoginPath;
+  }
+
+  private static boolean isJoinURI(HttpServletRequest request) {
+    boolean isJoinMethod = request.getMethod().equals(POST.name());
+    boolean isJoinPath = simpleMatch(request.getRequestURI(), joinPath);
+    return isJoinMethod && isJoinPath;
+  }
+
+  private static boolean isPreflight(HttpServletRequest request) {
+    return request.getMethod().equals(OPTIONS.name());
   }
 
   private void validate(HttpSession session) {

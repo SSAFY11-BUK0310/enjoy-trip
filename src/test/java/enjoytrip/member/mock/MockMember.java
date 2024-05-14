@@ -3,9 +3,8 @@ package enjoytrip.member.mock;
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.domain.RoleType;
-import lombok.Getter;
-
 import java.time.LocalDateTime;
+import lombok.Getter;
 
 @Getter
 public class MockMember extends Member {
@@ -15,7 +14,7 @@ public class MockMember extends Member {
   public MockMember(Long id, String email, String password, String name, Integer age, Gender gender,
       String phoneNumber, RoleType roleType, LocalDateTime createAt, LocalDateTime updatedAt,
       String createdBy, String updatedBy) {
-    super(id, email, password, name, age, gender, phoneNumber, roleType, createAt, updatedAt,
+    super(id, email, password, name, age, gender, roleType, phoneNumber, createAt, updatedAt,
         createdBy, updatedBy);
   }
 

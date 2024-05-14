@@ -5,8 +5,18 @@
   <insert id="save" parameterType="enjoytrip.member.domain.Member" useGeneratedKeys="true"
     keyProperty="id">
     insert into member
-    values (#{id}, #{email}, #{password}, #{name}, #{age}, #{gender}, #{phoneNumber}, #{roleType},
-            #{createdAt}, #{updatedAt}, #{createdBy}, #{updatedBy})
+    values (#{id},
+            #{email},
+            #{password},
+            #{name},
+            #{age},
+            #{gender},
+            #{roleType},
+            #{phoneNumber},
+            #{createdAt},
+            #{updatedAt},
+            #{createdBy},
+            #{updatedBy})
   </insert>
 
   <select id="findById" parameterType="long" resultType="enjoytrip.member.domain.Member">
@@ -16,6 +26,7 @@
            name,
            age,
            gender,
+           role_type,
            phone_number,
            created_at,
            updated_at,
@@ -32,6 +43,7 @@
            name,
            age,
            gender,
+           role_type,
            phone_number,
            created_at,
            updated_at,
