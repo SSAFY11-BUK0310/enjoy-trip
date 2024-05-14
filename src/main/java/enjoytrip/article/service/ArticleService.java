@@ -42,22 +42,25 @@ public class ArticleService {
 
     public ArticleSaveResponse save(ArticleSaveRequest request) throws Exception {
 
-        MultipartFile image = null;
-        if (request.getBase64Image() != null) {
-            image = getMultipartFile(request.getBase64Image());
-        }
+        MultipartFile image = getMultipartFile(request.getBase64Image());
 
         // imageUUID 생성, 이미지 저장.
         UploadFile uploadFile = fileStore.storeFile(image);
+
         // uploadFile이 null이면 default image 넣어주자.
         if (uploadFile == null) {
             uploadFile = new UploadFile(NO_IMAGE_PNG, NO_IMAGE_PNG);
         }
 
-        Article newArticle = Article.builder().memberId(request.getMemberId())
-            .title(request.getTitle()).content(request.getContent())
-            .imageName(uploadFile.getUploadFileName()).imageUUID(uploadFile.getUploadFileUUID())
-            .articleType(request.getArticleType()).views(0).address(request.getAddress())
+        Article newArticle = Article.builder()
+            .memberId(request.getMemberId())
+            .title(request.getTitle())
+            .content(request.getContent())
+            .imageName(uploadFile.getUploadFileName())
+            .imageUUID(uploadFile.getUploadFileUUID())
+            .articleType(request.getArticleType())
+            .views(0)
+            .address(request.getAddress())
             .createdAt(LocalDateTime.now())
             .createdBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
@@ -85,10 +88,7 @@ public class ArticleService {
 
     public ArticleUpdateResponse update(ArticleUpdateRequest request) throws Exception {
 
-        MultipartFile image = null;
-        if (request.getBase64Image() != null) {
-            image = getMultipartFile(request.getBase64Image());
-        }
+        MultipartFile image = getMultipartFile(request.getBase64Image());
 
         // update할 이미지가 있다면 기존 이미지 삭제(no_image.png 제외)
         // 새로운 이미지에 대한 UUID 만들고 저장
@@ -101,16 +101,22 @@ public class ArticleService {
             request.addImageUUID(uploadFile.getUploadFileUUID());
         }
 
-        Article newArticle = Article.builder().id(request.getId()).memberId(request.getMemberId())
-            .title(request.getTitle()).content(request.getContent())
-            .imageName(request.getImageName()).imageUUID(request.getImageUUID())
-            .views(request.getViews()).address(request.getAddress())
-            .articleType(request.getArticleType()).updatedAt(LocalDateTime.now())
+        Article newArticle = Article.builder()
+            .id(request.getId())
+            .memberId(request.getMemberId())
+            .title(request.getTitle())
+            .content(request.getContent())
+            .imageName(request.getImageName())
+            .imageUUID(request.getImageUUID())
+            .views(request.getViews())
+            .address(request.getAddress())
+            .articleType(request.getArticleType())
+            .updatedAt(LocalDateTime.now())
             .updatedBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
 
         Long result = articleRepository.update(newArticle);
-        if (result == 0) {
+        if (result == 0) { // TODO: 예외 발생 시 갱신을 위해 저장한 이미지 삭제, 원 이미지 복원
             throw new ArticleUpdateException(ARTICLE_UPDATE_FAILED, "cannot update article");
         }
         return new ArticleUpdateResponse(newArticle.getId());
@@ -133,6 +139,9 @@ public class ArticleService {
     }
 
     private MultipartFile getMultipartFile(Base64Image base64Image) {
+        if (base64Image == null) {
+            return null;
+        }
         String fileName = base64Image.getOriginalName();
         String base64File = base64Image.getBase64File();
         String extension = base64Image.getExtension();
