@@ -1,8 +1,6 @@
 package enjoytrip.article.service;
 
 import static enjoytrip.global.exception.ErrorCode.ARTICLE_NOT_FOUND;
-import static enjoytrip.global.exception.ErrorCode.ARTICLE_SAVE_FAILED;
-import static enjoytrip.global.exception.ErrorCode.ARTICLE_UPDATE_FAILED;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
@@ -13,8 +11,6 @@ import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.exception.ArticleNotFoundException;
-import enjoytrip.article.exception.ArticleSaveException;
-import enjoytrip.article.exception.ArticleUpdateException;
 import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.article.util.file.FileStore;
 import enjoytrip.article.util.file.UploadFile;
@@ -65,10 +61,8 @@ public class ArticleService {
             .createdBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
 
-        Long result = articleRepository.save(newArticle);
-        if (result == 0) {
-            throw new ArticleSaveException(ARTICLE_SAVE_FAILED, "cannot register new article");
-        }
+        // TODO: DB 반환 값에 대한 내용 응답에 추가하기.
+        articleRepository.save(newArticle);
         return new ArticleSaveResponse(newArticle.getId());
     }
 
@@ -115,10 +109,9 @@ public class ArticleService {
             .updatedBy("dummyEmail") // TODO: memberId로 member를 조회에서 해당 member 이메일을 넣자.
             .build();
 
-        Long result = articleRepository.update(newArticle);
-        if (result == 0) { // TODO: 예외 발생 시 갱신을 위해 저장한 이미지 삭제, 원 이미지 복원
-            throw new ArticleUpdateException(ARTICLE_UPDATE_FAILED, "cannot update article");
-        }
+        // TODO: DB 반환 값에 대한 내용 응답에 추가하기.
+        articleRepository.update(newArticle);
+        // TODO: 예외 발생 시 갱신을 위해 저장한 이미지 삭제, 원 이미지 복원
         return new ArticleUpdateResponse(newArticle.getId());
     }
 
