@@ -1,14 +1,15 @@
 package enjoytrip.member.exception;
 
-public class MemberNotFoundException extends RuntimeException {
+import enjoytrip.global.exception.BusinessException;
+import enjoytrip.global.exception.ErrorCode;
 
-  private static final String message = "회원을 찾지 못했습니다.";
+public class MemberNotFoundException extends BusinessException {
 
-  public MemberNotFoundException() {
-    super(message);
+  public MemberNotFoundException(ErrorCode errorCode, String message) {
+    super(errorCode, message);
   }
 
-  public MemberNotFoundException(Throwable cause) {
-    super(message, cause);
+  public MemberNotFoundException(ErrorCode errorCode, String message, Throwable cause) {
+    super(errorCode, message, cause);
   }
 }

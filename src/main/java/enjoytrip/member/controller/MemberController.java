@@ -10,7 +10,7 @@ import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.dto.response.MemberSaveResponse;
 import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.service.MemberService;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@AllArgsConstructor
+@RequiredArgsConstructor
 @RequestMapping("/members")
 public class MemberController {
 
@@ -36,7 +36,7 @@ public class MemberController {
 
   @GetMapping("/{id}")
   public ResponseEntity<MemberFindResponse> find(@PathVariable Long id) {
-    MemberFindResponse memberFindResponse = memberService.find(id);
+    MemberFindResponse memberFindResponse = memberService.findById(id);
     return ResponseEntity.status(OK).body(memberFindResponse);
   }
 

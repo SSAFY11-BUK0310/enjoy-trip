@@ -1,6 +1,6 @@
 package enjoytrip.member.service;
 
-import java.time.LocalDateTime;
+import static enjoytrip.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.request.MemberSaveRequest;
@@ -10,11 +10,12 @@ import enjoytrip.member.dto.response.MemberSaveResponse;
 import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.repository.MemberRepository;
-import lombok.AllArgsConstructor;
+import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MemberService {
 
   private final MemberRepository memberRepository;
@@ -37,14 +38,18 @@ public class MemberService {
     return new MemberSaveResponse(newMember.getId());
   }
 
-  public MemberFindResponse find(Long id) {
-    Member findMember = memberRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+  public MemberFindResponse findById(Long id) {
+    Member findMember = getMemberById(id);
+    return new MemberFindResponse(findMember);
+  }
+
+  public MemberFindResponse findByEmail(String email) {
+    Member findMember = getMemberByEmail(email);
     return new MemberFindResponse(findMember);
   }
 
   public MemberUpdateResponse update(MemberUpdateRequest request) {
-    Member findMember = memberRepository.findById(request.getId())
-        .orElseThrow(MemberNotFoundException::new);
+    Member findMember = getMemberById(request.getId());
     findMember.update(
         request.getEmail(),
         request.getPassword(),
@@ -60,5 +65,15 @@ public class MemberService {
 
   public void delete(Long id) {
     memberRepository.delete(id);
+  }
+
+  private Member getMemberById(Long id) {
+    return memberRepository.findById(id)
+        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND, "does not exist member"));
+  }
+
+  private Member getMemberByEmail(String email) {
+    return memberRepository.findByEmail(email)
+        .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND, "does not exist member"));
   }
 }

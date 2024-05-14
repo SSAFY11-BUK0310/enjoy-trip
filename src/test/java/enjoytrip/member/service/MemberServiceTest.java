@@ -51,13 +51,27 @@ class MemberServiceTest {
 
   @Test
   @DisplayName("회원 id로 조회 성공")
-  void find() {
+  void findById() {
     //given
     Member member = getMember();
     doReturn(Optional.ofNullable(member)).when(memberRepository).findById(1L);
 
     //when
-    MemberFindResponse response = memberService.find(1L);
+    MemberFindResponse response = memberService.findById(1L);
+
+    //then
+    assertThat(response).usingRecursiveComparison().isEqualTo(new MemberFindResponse(member));
+  }
+
+  @Test
+  @DisplayName("회원 email로 조회 성공")
+  void findByEmail() {
+    //given
+    Member member = getMember();
+    doReturn(Optional.ofNullable(member)).when(memberRepository).findByEmail(member.getEmail());
+
+    //when
+    MemberFindResponse response = memberService.findByEmail(member.getEmail());
 
     //then
     assertThat(response).usingRecursiveComparison().isEqualTo(new MemberFindResponse(member));
@@ -88,7 +102,7 @@ class MemberServiceTest {
     doReturn(Optional.empty()).when(memberRepository).findById(1L);
 
     //expected
-    assertThrows(MemberNotFoundException.class, () -> memberService.find(1L));
+    assertThrows(MemberNotFoundException.class, () -> memberService.findById(1L));
   }
 
   @Test
