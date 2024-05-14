@@ -4,5 +4,14 @@ spring:
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
     password: 1234
+  servlet:
+    multipart:
+      max-file-size: 1MB
+      max-request-size: 10MB
+
 mybatis:
   config-location: classpath:/config/mybatis-config.xml
+
+#  C:/Users/dnjsd/enjoytrip/file/
+file:
+  dir: classpath:/static/images/

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="enjoytrip.article.repository.ArticleRepository">
+
+  <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
+    keyProperty="id">
+    insert into article(member_id, title, content, image_name, image_uuid, views, type,
+                        address, created_at,
+                        created_by, updated_at, updated_by)
+    values (#{memberId}, #{title}, #{content}, #{imageName}, #{imageUUID}, #{views}, #{articleType},
+            #{address},
+            #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
+  </insert>
+
+  <select id="findByPage" parameterType="map"
+    resultType="enjoytrip.article.domain.Article">
+    select id, member_id, title, content, image_name, image_uuid, views, address, type,
+    created_at, updated_at, created_by, updated_by
+    from article
+    <where>
+      <if test="true">
+        and type=#{articleType}
+      </if>
+      <if test="title != null and title != ''">
+        and title like concat('%', #{title}, '%')
+      </if>
+    </where>
+    <if test="pageable.sort != null and !pageable.sort.isEmpty()">
+      order by
+      <foreach collection="pageable.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    limit #{pageable.pageSize} offset #{pageable.offset};
+
+  </select>
+
+  <select id="count" parameterType="map">
+    select count(type)
+    from article
+    where type=#{articleType}
+    <if test="title != null and title != ''">
+      and title like concat('%', #{title}, '%');
+    </if>
+
+  </select>
+
+  <select id="findById" parameterType="long" resultType="enjoytrip.article.domain.Article">
+    select id,
+           member_id,
+           title,
+           content,
+           image_name,
+           image_uuid,
+           views,
+           address,
+           type,
+           created_at,
+           updated_at,
+           created_by,
+           updated_by
+    from article
+    where id = #{id}
+  </select>
+
+
+  <update id="update" parameterType="enjoytrip.article.domain.Article">
+    update article
+    set member_id  = #{memberId},
+        title      = #{title},
+        content    = #{content},
+        image_name = #{imageName},
+        image_uuid = #{imageUUID},
+        views      = #{views},
+        type       = #{articleType},
+        address    = #{address},
+        updated_at = #{updatedAt},
+        updated_by = #{updatedBy}
+    where id = #{id};
+  </update>
+
+  <delete id="delete" parameterType="long">
+    delete
+    from article
+    where id = #{id};
+  </delete>
+</mapper>
