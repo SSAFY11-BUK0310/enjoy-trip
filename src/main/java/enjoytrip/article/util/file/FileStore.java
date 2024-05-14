@@ -24,7 +24,7 @@ public class FileStore {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();
-        String storeFileName = createStoreFileName(originalFilename);
+        String storeFileName = getStoreFileName(originalFilename);
         multipartFile.transferTo(new File(getFullPath(storeFileName)));
         return UploadFile.builder()
             .uploadFileName(originalFilename)
@@ -45,7 +45,7 @@ public class FileStore {
         return false;
     }
 
-    private String createStoreFileName(String originalFilename) {
+    private String getStoreFileName(String originalFilename) {
         String ext = extractExt(originalFilename);
         String uuid = UUID.randomUUID().toString();
         return uuid + "." + ext;
