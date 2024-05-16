@@ -62,7 +62,7 @@ public class ArticleController {
     }
 
     @GetMapping("/{fileName}/images")
-    public Resource file(@PathVariable String fileName) throws MalformedURLException {
+    public Resource file(@PathVariable("fileName") String fileName) throws MalformedURLException {
         return new UrlResource("file:" + fileStore.getFullPath(fileName));
     }
 
