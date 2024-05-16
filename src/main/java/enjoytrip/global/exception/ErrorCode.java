@@ -8,13 +8,14 @@ import org.springframework.http.HttpStatus;
 
 @Getter
 public enum ErrorCode {
-    LOGIN_FAILED(UNAUTHORIZED),
-    MEMBER_NOT_FOUND(BAD_REQUEST),
-    ARTICLE_NOT_FOUND(BAD_REQUEST);
+  LOGIN_FAILED(UNAUTHORIZED),
+  MEMBER_NOT_FOUND(BAD_REQUEST),
+  ARTICLE_NOT_FOUND(BAD_REQUEST),
+  INCORRECT_PASSWORD(BAD_REQUEST);
 
-    private final HttpStatus status;
+  private final HttpStatus status;
 
-    ErrorCode(HttpStatus status) {
-        this.status = status;
-    }
+  ErrorCode(HttpStatus status) {
+    this.status = status;
+  }
 }
