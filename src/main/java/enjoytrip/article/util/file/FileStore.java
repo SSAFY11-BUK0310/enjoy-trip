@@ -20,7 +20,7 @@ public class FileStore {
     }
 
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
-        if (multipartFile.isEmpty()) {
+        if (multipartFile == null || multipartFile.isEmpty()) {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();

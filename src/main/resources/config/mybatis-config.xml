@@ -9,5 +9,6 @@
 
   <mappers>
     <mapper resource="mapper/member-query.xml"/>
+    <mapper resource="mapper/article-query.xml"/>
   </mappers>
 </configuration>
