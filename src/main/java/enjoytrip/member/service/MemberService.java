@@ -65,7 +65,6 @@ public class MemberService {
   }
 
   public MemberUpdateResponse updatePassword(MemberPasswordUpdateRequest request) {
-    System.out.println("request = " + request);
     Member findMember = getMemberById(request.getId());
     checkOriginPassword(findMember.getPassword(), request.getCurrentPassword());
     checkNewPassword(request.getNewPassword(), request.getCheckPassword());
