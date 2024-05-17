@@ -50,7 +50,7 @@ class AuthControllerTest {
   @DisplayName("요청 이메일에 해당하는 회원이 존재하지 않으면 메시지가 \"member not found\"인 AuthException 예외가 발생하고 로그인에 실패한다.")
   void failLoginByNotFoundMember() throws Exception {
     // given
-    MemberLoginRequest request = new MemberLoginRequest("test@email.com", "test");
+    MemberLoginRequest request = new MemberLoginRequest("test@email.com", "password");
     String requestJson = objectMapper.writeValueAsString(request);
     doThrow(MemberNotFoundException.class).when(memberService).findByEmail(request.getEmail());
 
@@ -94,7 +94,7 @@ class AuthControllerTest {
   @DisplayName("검증을 통과하면 세션을 생성하고 로그인에 성공한다.")
   void successLogin() throws Exception {
     // given
-    MemberLoginRequest request = new MemberLoginRequest("test@email.com", "test");
+    MemberLoginRequest request = new MemberLoginRequest("test@email.com", "password");
     String requestJson = objectMapper.writeValueAsString(request);
     MemberFindResponse memberFindResponse = new MemberFindResponse(getMember());
     doReturn(memberFindResponse).when(memberService).findByEmail(request.getEmail());
@@ -116,15 +116,15 @@ class AuthControllerTest {
     return Member.builder()
         .id(1L)
         .email("test@email.com")
-        .password("test")
-        .name("Test")
+        .password("password")
+        .name("name")
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
         .createAt(LocalDateTime.now())
-        .createdBy("Test")
+        .createdBy("name")
         .updatedAt(LocalDateTime.now())
-        .updatedBy("Test")
+        .updatedBy("name")
         .build();
   }
 }

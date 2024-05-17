@@ -8,8 +8,10 @@ import lombok.NoArgsConstructor;
 public class MemberLoginResponse {
 
   private Long id;
+  private String name;
 
-  public MemberLoginResponse(Long id) {
+  public MemberLoginResponse(Long id, String name) {
     this.id = id;
+    this.name = name;
   }
 }
