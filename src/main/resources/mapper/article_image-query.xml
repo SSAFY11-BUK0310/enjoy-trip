@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="enjoytrip.global.image.repository.ImageRepository">
+
+  <insert id="save" parameterType="enjoytrip.global.image.domain.Image" useGeneratedKeys="true"
+    keyProperty="id">
+    insert into image(id, article_id, image_name, image_uuid,
+                              created_at, created_by, updated_at, updated_by)
+    values (#{id}, #{articleId}, #{imageName}, #{imageUUID},
+            #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
+  </insert>
+
+  <select id="findByArticleId" parameterType="long" resultType="enjoytrip.global.image.domain.Image">
+    select id, article_id, image_name, image_uuid, created_at, creaetd_by, created_at, created_by
+    from image
+    where article_id = #{articleId}
+  </select>
+
+  <delete id="deleteByArticleId" parameterType="long">
+    delete from image where article_id = #{articleId}
+  </delete>
+
+</mapper>

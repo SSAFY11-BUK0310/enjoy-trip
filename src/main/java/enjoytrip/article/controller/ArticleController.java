@@ -7,7 +7,7 @@ import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.service.ArticleService;
-import enjoytrip.article.util.file.FileStore;
+import enjoytrip.global.image.FileStore;
 import java.net.MalformedURLException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,9 @@ package enjoytrip.article.dto.response;
 
 
 import enjoytrip.article.domain.Article;
+import enjoytrip.global.image.domain.Image;
 import enjoytrip.article.domain.ArticleType;
+import java.util.List;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -16,8 +18,7 @@ public class ArticleFindResponse {
     private Long memberId;
     private String title;
     private String content;
-    private String imageName;
-    private String imageUUID;
+    private List<Image> articleImages;
     private Integer views;
     private String address;
     private ArticleType articleType;
@@ -31,8 +32,6 @@ public class ArticleFindResponse {
         this.memberId = article.getMemberId();
         this.title = article.getTitle();
         this.content = article.getContent();
-        this.imageName = article.getImageName();
-        this.imageUUID = article.getImageUUID();
         this.views = article.getViews();
         this.address = article.getAddress();
         this.articleType = article.getArticleType();
@@ -40,5 +39,9 @@ public class ArticleFindResponse {
         this.updatedAt = article.getUpdatedAt();
         this.createdBy = article.getCreatedBy();
         this.updatedBy = article.getUpdatedBy();
+    }
+
+    public void addArticleImages(List<Image> articleImages){
+        this.articleImages = articleImages;
     }
 }

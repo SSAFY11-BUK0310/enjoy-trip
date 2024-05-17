@@ -1,7 +1,9 @@
-package enjoytrip.article.util.file;
+package enjoytrip.global.image;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +21,18 @@ public class FileStore {
         return fileDir + fileName;
     }
 
+    public List<UploadFile> storeFiles(List<MultipartFile> multipartFiles) throws IOException {
+        List<UploadFile> storeFileResult = new ArrayList<>();
+        for (MultipartFile multipartFile : multipartFiles) {
+            if (!multipartFile.isEmpty()) {
+
+                storeFileResult.add(storeFile(multipartFile));
+            }
+        }
+        return storeFileResult;
+    }
     public UploadFile storeFile(MultipartFile multipartFile) throws IOException {
-        if (multipartFile == null || multipartFile.isEmpty()) {
+        if (multipartFile.isEmpty()) {
             return null;
         }
         String originalFilename = multipartFile.getOriginalFilename();
@@ -32,17 +44,16 @@ public class FileStore {
             .build();
     }
 
-    public boolean deleteFile(String fileName) {
+    public void deleteFile(String fileName) {
         String fullPath = getFullPath(fileName);
         try {
             File file = new File(fullPath);
             if (file.exists()) {
-                return file.delete();
+                file.delete();
             }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
-        return false;
     }
 
     private String getStoreFileName(String originalFilename) {
