@@ -11,6 +11,9 @@ import enjoytrip.comment.dto.response.CommentSaveResponse;
 import enjoytrip.comment.dto.response.CommentUpdateResponse;
 import enjoytrip.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,10 +21,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("comments")
 public class CommentController {
 
   private final CommentService commentService;
@@ -33,10 +38,11 @@ public class CommentController {
     return ResponseEntity.status(CREATED).body(commentSaveResponse);
   }
 
-  @GetMapping("/{id}")
-  public ResponseEntity<CommentFindResponse> find(@PathVariable("id") Long id) {
-    CommentFindResponse commentFindResponse = commentService.findById(id);
-    return ResponseEntity.status(OK).body(commentFindResponse);
+  @GetMapping("/{articleId}")
+  public ResponseEntity<Page<CommentFindResponse>> findByBoardId(@PathVariable("articleId") Long articleId,
+      @PageableDefault Pageable pageable) {
+    Page<CommentFindResponse> commentPage = commentService.findByArticleId(articleId, pageable);
+    return ResponseEntity.status(OK).body(commentPage);
   }
 
   @PutMapping("/{id}")

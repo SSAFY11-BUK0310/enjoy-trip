@@ -19,12 +19,10 @@ public class MemberSaveRequest {
   private Gender gender;
   private String phoneNumber;
   private RoleType roleType;
-  private String createdBy;
-  private String updatedBy;
 
   @Builder
   public MemberSaveRequest(String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, RoleType roleType, String createdBy, String updatedBy) {
+      String phoneNumber, RoleType roleType) {
     this.email = email;
     this.password = password;
     this.name = name;
@@ -32,7 +30,5 @@ public class MemberSaveRequest {
     this.gender = gender;
     this.phoneNumber = phoneNumber;
     this.roleType = roleType;
-    this.createdBy = createdBy;
-    this.updatedBy = updatedBy;
   }
 }

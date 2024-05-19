@@ -1,5 +1,6 @@
 package enjoytrip.comment.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,18 +10,14 @@ public class CommentSaveRequest {
 
   private Long memberId;
   private Long articleId;
-  private Long childId;
+  private Long parentId;
   private String content;
-  private String createdBy;
-  private String updatedBy;
 
-  public CommentSaveRequest(Long memberId, Long articleId, Long childId, String content,
-      String createdBy, String updatedBy) {
+  @Builder
+  public CommentSaveRequest(Long memberId, Long articleId, Long parentId, String content) {
     this.memberId = memberId;
     this.articleId = articleId;
-    this.childId = childId;
+    this.parentId = parentId;
     this.content = content;
-    this.createdBy = createdBy;
-    this.updatedBy = updatedBy;
   }
 }

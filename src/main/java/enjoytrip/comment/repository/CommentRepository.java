@@ -1,9 +1,13 @@
 package enjoytrip.comment.repository;
 
+import enjoytrip.article.domain.ArticleType;
 import enjoytrip.comment.domain.Comment;
+import java.util.List;
 import java.util.Optional;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Mapper
 public interface CommentRepository {
@@ -12,7 +16,9 @@ public interface CommentRepository {
 
   Optional<Comment> findById(Long id);
 
-  Page<Comment> findByBoardId(Long boardId);
+  List<Comment> findByArticleId(@Param("articleId") Long articleId, @Param("pageable") Pageable pageable);
+
+  Integer count(@Param("articleId") Long articleId);
 
   Long update(Comment comment);
 

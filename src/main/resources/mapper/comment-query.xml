@@ -7,7 +7,7 @@
     keyProperty="id">
     insert into comment(member_id,
                         article_id,
-                        child_id,
+                        parent_id,
                         content,
                         created_at,
                         created_by,
@@ -15,7 +15,7 @@
                         updated_by)
     values (#{memberId},
             #{articleId},
-            #{childId},
+            #{parentId},
             #{content},
             #{createdAt},
             #{createdBy},
@@ -27,21 +27,21 @@
     select id,
            member_id,
            article_id,
-           child_id,
+           parent_id,
            content,
            created_at,
-           created_by,
            updated_at,
+           created_by,
            updated_by
     from comment
     where id = #{id}
   </select>
 
-  <select id="findByBoardId" parameterType="map" resultType="enjoytrip.comment.domain.Comment">
+  <select id="findByArticleId" parameterType="map" resultType="enjoytrip.comment.domain.Comment">
     select id,
     member_id,
     article_id,
-    child_id,
+    parent_id,
     content,
     created_at,
     updated_at,
@@ -60,6 +60,13 @@
       </foreach>
     </if>
     limit #{pageable.pageSize} offset #{pageable.offset};
+  </select>
+
+  <select id="count" parameterType="long">
+    select count(article_id)
+    from comment
+    where article_id=#{articleId}
+
   </select>
 
   <update id="update" parameterType="enjoytrip.comment.domain.Comment">

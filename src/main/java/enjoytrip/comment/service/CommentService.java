@@ -12,8 +12,11 @@ import enjoytrip.comment.exception.CommentNotFoundException;
 import enjoytrip.comment.repository.CommentRepository;
 import enjoytrip.member.service.MemberService;
 import java.time.LocalDateTime;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +31,7 @@ public class CommentService {
     Comment newComment = Comment.builder()
         .memberId(request.getMemberId())
         .articleId(request.getArticleId())
-        .childId(request.getChildId())
+        .parentId(request.getParentId())
         .content(request.getContent())
         .createdAt(LocalDateTime.now())
         .createdBy(writer)
@@ -44,8 +47,12 @@ public class CommentService {
     return new CommentFindResponse(findComment);
   }
 
-  public Page<CommentFindResponse> findByBoardId(Long boardId) {
-    return commentRepository.findByBoardId(boardId).map(CommentFindResponse::new);
+  public Page<CommentFindResponse> findByArticleId(Long articleId, Pageable pageable) {
+    Integer total = commentRepository.count(articleId);
+    List<CommentFindResponse> list = commentRepository.findByArticleId(articleId, pageable).stream()
+        .map(CommentFindResponse::new)
+        .toList();
+    return new PageImpl<>(list, pageable, total);
   }
 
   public CommentUpdateResponse update(CommentUpdateRequest request) {
