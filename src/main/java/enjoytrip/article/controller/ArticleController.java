@@ -7,12 +7,9 @@ import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.service.ArticleService;
-import enjoytrip.global.image.FileStore;
-import java.net.MalformedURLException;
+import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -40,10 +37,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class ArticleController {
 
     private final ArticleService articleService;
-    private final FileStore fileStore;
 
-
-    @PostMapping(consumes = "application/json")
+    @PostMapping
     public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)
         throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(articleService.save(request));
@@ -61,11 +56,6 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.findById(id));
     }
 
-    @GetMapping("/{fileName}/images")
-    public Resource file(@PathVariable("fileName") String fileName) throws MalformedURLException {
-        return new UrlResource("file:" + fileStore.getFullPath(fileName));
-    }
-
     @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity<ArticleUpdateResponse> update(@RequestBody ArticleUpdateRequest request)
         throws Exception {
@@ -73,10 +63,9 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<String> delete(@PathVariable("id") Long id) throws IOException {
         articleService.delete(id);
         //204(No Content) : 작업이 수행되었으며 별도로 내용을 반환할게 없을 때.
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 }

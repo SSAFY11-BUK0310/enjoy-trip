@@ -5,9 +5,9 @@ import lombok.Getter;
 @Getter
 public class ErrorResponse {
 
-  private ErrorCode errorCode;
+    private ErrorCode errorCode;
 
-  public ErrorResponse(ErrorCode errorCode) {
-    this.errorCode = errorCode;
-  }
+    public ErrorResponse(ErrorCode errorCode) {
+        this.errorCode = errorCode;
+    }
 }

@@ -14,14 +14,16 @@ public class Image extends BaseEntity {
     private Long articleId;
     private String imageName;
     private String imageUUID;
+    private String directoryUUID;
 
     @Builder
-    public Image(Long id, Long articleId, String imageName, String imageUUID,
-        LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    public Image(Long id, Long articleId, String imageName, String imageUUID, String directoryUUID,
+        LocalDateTime createdAt, String createdBy, LocalDateTime updatedAt, String updatedBy) {
         super(createdAt, updatedAt, createdBy, updatedBy);
         this.id = id;
         this.articleId = articleId;
         this.imageName = imageName;
         this.imageUUID = imageUUID;
+        this.directoryUUID = directoryUUID;
     }
 }

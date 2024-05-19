@@ -7,17 +7,22 @@ import static org.mockito.Mockito.verify;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
-import enjoytrip.article.dto.Base64Image;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.global.image.FileStore;
+import enjoytrip.global.image.Service.ImageService;
 import enjoytrip.global.image.UploadFile;
+import enjoytrip.global.image.dto.request.Base64Image;
+import enjoytrip.member.domain.Member;
+import enjoytrip.member.repository.MemberRepository;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,7 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.multipart.MultipartFile;
 
 @ExtendWith(MockitoExtension.class)
 class ArticleServiceTest {
@@ -38,6 +42,12 @@ class ArticleServiceTest {
 
     @Mock
     private ArticleRepository articleRepository;
+
+    @Mock
+    private ImageService imageService;
+
+    @Mock
+    private MemberRepository memberRepository;
 
     @Mock
     private FileStore fileStore;
@@ -84,8 +94,11 @@ class ArticleServiceTest {
         // given
         UploadFile uploadFile = new UploadFile("fileName", "uuid");
         ArticleSaveRequest request = getArticleSaveRequest();
+        String directoryUUID = UUID.randomUUID().toString();
+        Member member = getMember();
 
-        doReturn(uploadFile).when(fileStore).storeFile(any(MultipartFile.class));
+        doReturn(Optional.ofNullable(member)).when(memberRepository).findById(1L);
+//        doReturn(uploadFile).when(fileStore).storeFile(any(MultipartFile.class), any(String.class));
         doReturn(1L).when(articleRepository).save(any(Article.class));
 
         // when
@@ -100,10 +113,10 @@ class ArticleServiceTest {
     void update() throws Exception {
         // given
         ArticleUpdateRequest request = getArticleFindRequest();
+        Member member = getMember();
 
         doReturn(1L).when(articleRepository).update(any(Article.class));
-        doReturn(new UploadFile("fileName", "uuid")).when(fileStore)
-            .storeFile(any(MultipartFile.class));
+        doReturn(Optional.ofNullable(member)).when(memberRepository).findById(1L);
 
         // when
         articleService.update(request);
@@ -114,7 +127,7 @@ class ArticleServiceTest {
 
     @DisplayName("게시물 삭제 성공")
     @Test
-    void deleteSuccessTest() {
+    void deleteSuccessTest() throws IOException {
         // given
         doReturn(Optional.ofNullable(getArticle(1L))).when(articleRepository)
             .findById(any(Long.class));
@@ -131,9 +144,9 @@ class ArticleServiceTest {
             .memberId(1L)
             .title("title")
             .content("content")
-            .imageName("imageName")
-            .imageUUID("imageUUID")
-            .base64Image(getBase64Image())
+            .selectedImages(new ArrayList<>())
+            .notSelectedImages(new ArrayList<>())
+            .directoryUUID(UUID.randomUUID().toString())
             .views(0)
             .address("address")
             .articleType(ArticleType.TRIP)
@@ -144,17 +157,26 @@ class ArticleServiceTest {
         List<Article> content = new ArrayList<>();
 
         for (int i = 1; i <= 10; i++) {
-            content.add(getArticle((long) i));
+            content.add(getArticle(i));
         }
         return content;
     }
 
+    private static Member getMember() {
+        return Member.builder()
+            .id(1L)
+            .name("name")
+            .build();
+    }
     private static ArticleSaveRequest getArticleSaveRequest() {
+
         return ArticleSaveRequest.builder()
             .memberId(1L)
             .title("title")
             .content("content")
-            .base64Image(getBase64Image())
+            .notSelectedImages(new ArrayList<>())
+            .selectedImages(new ArrayList<>())
+            .directoryUUID(UUID.randomUUID().toString())
             .address("address")
             .articleType(ArticleType.TRIP)
             .build();
@@ -174,10 +196,8 @@ class ArticleServiceTest {
             .memberId(1L)
             .title("title")
             .content("content")
-            .imageName("imageName")
-            .imageUUID("imageUUID")
-            .address("address")
             .views(1)
+            .address("address")
             .articleType(ArticleType.BOARD)
             .createdAt(LocalDateTime.now())
             .createdBy("createdBy")

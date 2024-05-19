@@ -20,9 +20,11 @@ public class Article extends BaseEntity {
     private Integer views;
     private String address;
     private ArticleType articleType;
+    private String directoryUUID;
 
     @Builder
-    public Article(Long id, Long memberId, String title, String content, Integer views, String address, ArticleType articleType,
+    public Article(Long id, Long memberId, String title, String content, Integer views,
+        String address, ArticleType articleType, String directoryUUID,
         LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
         super(createdAt, updatedAt, createdBy, updatedBy);
         this.id = id;
@@ -31,6 +33,7 @@ public class Article extends BaseEntity {
         this.content = content;
         this.views = views;
         this.address = address;
+        this.directoryUUID = directoryUUID;
         this.articleType = articleType;
     }
 }
