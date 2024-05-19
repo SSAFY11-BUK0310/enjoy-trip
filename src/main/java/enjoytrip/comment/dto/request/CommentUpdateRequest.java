@@ -1,5 +1,7 @@
 package enjoytrip.comment.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,8 +10,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CommentUpdateRequest {
 
+  @NotNull
   private Long id;
+  @NotNull
   private Long memberId;
+  @NotBlank
   private String content;
 
   @Builder
