@@ -163,7 +163,7 @@ class MemberServiceTest {
     verify(memberRepository, times(1)).delete(1L);
   }
 
-  private static MemberUpdateRequest getMemberUpdateRequest() {
+  private MemberUpdateRequest getMemberUpdateRequest() {
     return MemberUpdateRequest.builder()
         .id(1L)
         .name("updatedName")
@@ -174,7 +174,7 @@ class MemberServiceTest {
         .build();
   }
 
-  private static MemberPasswordUpdateRequest getMemberPasswordUpdateRequest(String password,
+  private MemberPasswordUpdateRequest getMemberPasswordUpdateRequest(String password,
       String newPassword, String checkPassword) {
     return MemberPasswordUpdateRequest.builder()
         .id(1L)
@@ -184,7 +184,7 @@ class MemberServiceTest {
         .build();
   }
 
-  private static MemberSaveRequest getMemberSaveRequest() {
+  private MemberSaveRequest getMemberSaveRequest() {
     return MemberSaveRequest.builder()
         .email("test@email.com")
         .password("password")
@@ -193,18 +193,16 @@ class MemberServiceTest {
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
         .roleType(RoleType.BASIC)
-        .createdBy("name")
-        .updatedBy("name")
         .build();
   }
 
-  private static MockMember getMockMember() {
+  private MockMember getMockMember() {
     return new MockMember(1L, "test@email.com", "password", "name", 20, Gender.FEMALE,
         "010-1234-1234",
         RoleType.BASIC, LocalDateTime.now(), LocalDateTime.now(), "name", "name");
   }
 
-  private static Member getMember() {
+  private Member getMember() {
     return Member.builder()
         .id(1L)
         .email("test@email.com")

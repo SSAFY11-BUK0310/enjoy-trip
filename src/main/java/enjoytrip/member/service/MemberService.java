@@ -34,8 +34,8 @@ public class MemberService {
         .roleType(request.getRoleType())
         .createAt(LocalDateTime.now())
         .updatedAt(LocalDateTime.now())
-        .createdBy(request.getCreatedBy())
-        .updatedBy(request.getUpdatedBy())
+        .createdBy(request.getEmail())
+        .updatedBy(request.getEmail())
         .build();
     memberRepository.save(newMember);
     return new MemberSaveResponse(newMember.getId());
