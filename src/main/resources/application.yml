@@ -8,6 +8,11 @@ spring:
     multipart:
       max-file-size: 1MB
       max-request-size: 10MB
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:mysql/schema.sql
+      data-locations: classpath:mysql/data.sql
 
 mybatis:
   config-location: classpath:/config/mybatis-config.xml
