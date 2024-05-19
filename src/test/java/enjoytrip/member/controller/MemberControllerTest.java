@@ -170,8 +170,6 @@ class MemberControllerTest {
         .age(20)
         .gender(Gender.FEMALE)
         .phoneNumber("010-1234-5678")
-        .createdBy("name")
-        .updatedBy("name")
         .build();
   }
 

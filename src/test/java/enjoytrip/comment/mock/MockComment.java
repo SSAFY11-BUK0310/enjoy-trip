@@ -1,5 +1,6 @@
-package enjoytrip.member.mock;
+package enjoytrip.comment.mock;
 
+import enjoytrip.comment.domain.Comment;
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.domain.RoleType;
@@ -7,25 +8,16 @@ import java.time.LocalDateTime;
 import lombok.Getter;
 
 @Getter
-public class MockMember extends Member {
+public class MockComment extends Comment {
 
   private boolean isUpdated = false;
 
-  public MockMember(Long id, String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, RoleType roleType, LocalDateTime createAt, LocalDateTime updatedAt,
-      String createdBy, String updatedBy) {
-    super(id, email, password, name, age, gender, roleType, phoneNumber, createAt, updatedAt,
-        createdBy, updatedBy);
+  public MockComment(Long id, Long memberId, Long articleId, Long parentId, String content,
+      LocalDateTime createdAt, LocalDateTime updatedAt, String createdBy, String updatedBy) {
+    super(id, memberId, articleId, parentId, content, createdAt, updatedAt, createdBy, updatedBy);
   }
 
-  public void updateInfo(String name, Integer age, Gender gender,
-      String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
-    super.updateInfo(name, age, gender, phoneNumber, updatedAt, updatedBy);
-    isUpdated = true;
-  }
-
-  public void updatePassword(String password) {
-    super.updatePassword(password);
+  public void update(String content, LocalDateTime updatedAt, String updatedBy) {
     isUpdated = true;
   }
 }
