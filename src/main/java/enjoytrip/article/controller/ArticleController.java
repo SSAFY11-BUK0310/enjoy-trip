@@ -70,8 +70,8 @@ public class ArticleController {
     }
 
     @PostMapping("/{id}/views")
-    public ResponseEntity<Long> updateViews(@PathVariable("id") Long id) {
-        Long views = articleService.updateViews(id);
-        return ResponseEntity.status(HttpStatus.OK).body(views);
+    public ResponseEntity<Void> updateViews(@PathVariable("id") Long id) {
+        articleService.updateViews(id);
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 }

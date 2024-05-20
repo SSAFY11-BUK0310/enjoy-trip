@@ -4,7 +4,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
@@ -16,25 +15,21 @@ import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.Service.ImageService;
 import enjoytrip.global.image.UploadFile;
 import enjoytrip.global.image.dto.request.Base64Image;
-import enjoytrip.global.image.repository.ImageRepository;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.repository.MemberRepository;
 import enjoytrip.member.service.MemberService;
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -51,15 +46,11 @@ class ArticleServiceTest {
 
     @Mock
     private ImageService imageService;
-    @Mock
-    private ImageRepository imageRepository;
+
 
     @Mock
     private MemberService memberService;
-    @Mock
-    private MemberRepository memberRepository;
-    @Mock
-    private FileStore fileStore;
+
 
     @DisplayName("게시물 다건 조회 성공")
     @Test
@@ -71,7 +62,6 @@ class ArticleServiceTest {
         Member member = getMember();
         MemberFindResponse memberFindResponse = new MemberFindResponse(member);
         List<Article> content = getArticles();
-
 
         doReturn(content).when(articleRepository).findByPage(articleType, title, pageable);
         doReturn(10).when(articleRepository).count(articleType, title);
@@ -104,13 +94,10 @@ class ArticleServiceTest {
     void save() throws Exception {
 
         // given
-        UploadFile uploadFile = new UploadFile("fileName", "uuid");
         ArticleSaveRequest request = getArticleSaveRequest();
-        String directoryUUID = UUID.randomUUID().toString();
         Member member = getMember();
         MemberFindResponse memberFindResponse = new MemberFindResponse(member);
         doReturn(memberFindResponse).when(memberService).findById(1L);
-//        doReturn(uploadFile).when(fileStore).storeFile(any(MultipartFile.class), any(String.class));
         doReturn(1L).when(articleRepository).save(any(Article.class));
 
         // when
@@ -168,6 +155,7 @@ class ArticleServiceTest {
             .name("name")
             .build();
     }
+
     private static ArticleSaveRequest getArticleSaveRequest() {
 
         return ArticleSaveRequest.builder()

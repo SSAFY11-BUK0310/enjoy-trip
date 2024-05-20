@@ -194,8 +194,8 @@ public class ArticleService {
         articleRepository.delete(id);
     }
 
-    public Long updateViews(Long id) {
-        return articleRepository.updateViews(id);
+    public void updateViews(Long id) {
+        articleRepository.updateViews(id);
     }
 
     private List<ArticleFindResponse> getArticleFindResponseList(List<Article> content) {
