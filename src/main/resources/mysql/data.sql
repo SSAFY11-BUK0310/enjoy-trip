@@ -30,3 +30,21 @@ insert into comment values(7, 4, 2, 5, 'content7', date(now()), date(now()), 'te
 insert into comment values(8, 5, 2, null, 'content8', date(now()), date(now()), 'test5@email.com', 'test5@email.com');
 insert into comment values(9, 6, 2, 8, 'content9', date(now()), date(now()), 'test6@email.com', 'test6@email.com');
 insert into comment values(10, 7, 3, null, 'content10', date(now()), date(now()), 'test7@email.com', 'test7@email.com');
+
+-- message_room
+insert into message_room values(1, 1, 1, 2, date(now()), date(now()), 'test1@email.com', 'test2@email.com');
+insert into message_room values(2, 1, 3, 2, date(now()), date(now()), 'test3@email.com', 'test3@email.com');
+insert into message_room values(3, 2, 4, 1, date(now()), date(now()), 'test4@email.com', 'test4@email.com');
+insert into message_room values(4, 3, 5, 4, date(now()), date(now()), 'test5@email.com', 'test4@email.com');
+
+-- message
+insert into message values(1, 1, 1, 'content1', date(now()), date(now()), 'test1@email.com', 'test1@email.com');
+insert into message values(2, 2, 1, 'content2', date(now()), date(now()), 'test2@email.com', 'test2@email.com');
+insert into message values(3, 1, 1, 'content3', date(now()), date(now()), 'test1@email.com', 'test1@email.com');
+insert into message values(4, 2, 1, 'content4', date(now()), date(now()), 'test2@email.com', 'test2@email.com');
+insert into message values(5, 3, 2, 'content5', date(now()), date(now()), 'test3@email.com', 'test3@email.com');
+insert into message values(6, 2, 2, 'content6', date(now()), date(now()), 'test2@email.com', 'test2@email.com');
+insert into message values(7, 3, 2, 'content7', date(now()), date(now()), 'test3@email.com', 'test3@email.com');
+insert into message values(8, 4, 3, 'content8', date(now()), date(now()), 'test4@email.com', 'test4@email.com');
+insert into message values(9, 5, 4, 'content9', date(now()), date(now()), 'test5@email.com', 'test5@email.com');
+insert into message values(10, 4, 4, 'content10', date(now()), date(now()), 'test4@email.com', 'test4@email.com');
