@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="enjoytrip.like.repository.LikeRepository">
+  <insert id="save" parameterType="enjoytrip.like.domain.Like" useGeneratedKeys="true" keyProperty="id">
+    insert into like(member_id, article_id, created_at, created_by, updated_at, updated_by)
+      (select #{memberId},
+              #{articleId},
+              #{created_at},
+              email,
+              #{updated_at},
+              email
+       from member
+       where id = #{memberId});
+
+
+  </insert>
+  <delete id="delete" parameterType="long">
+    delete
+    from like
+    where id = #{id};
+
+  </delete>
+  <select id="findByArticleId" parameterType="long" resultType="enjoytrip.like.domain.Like">
+    select id,
+           member_id,
+           article_id,
+           created_at,
+           created_by,
+           updated_at,
+           updated_by
+    from like
+    where article_id = #{articleId};
+
+  </select>
+
+  <select id="findByMemberId" parameterType="long" resultType="enjoytrip.like.domain.Like" >
+    select id,
+           member_id,
+           article_id,
+           created_at,
+           created_by,
+           updated_at,
+           updated_by
+    from like
+    where member_id = #{memberId};
+
+  </select>
+</mapper>
