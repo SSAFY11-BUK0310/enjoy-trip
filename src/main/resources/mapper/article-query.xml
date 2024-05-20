@@ -5,17 +5,16 @@
 
   <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
     keyProperty="id">
-    insert into article(member_id, title, content, image_name, image_uuid, views, type,
+    insert into article(member_id, title, content, directory_uuid, views, type,
                         address, created_at,
                         created_by, updated_at, updated_by)
-    values (#{memberId}, #{title}, #{content}, #{imageName}, #{imageUUID}, #{views}, #{articleType},
-            #{address},
+    values (#{memberId}, #{title}, #{content}, #{directoryUUID}, #{views}, #{articleType}, #{address},
             #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
   </insert>
 
   <select id="findByPage" parameterType="map"
     resultType="enjoytrip.article.domain.Article">
-    select id, member_id, title, content, image_name, image_uuid, views, address, type,
+    select id, member_id, title, content, views, address, type, directory_uuid,
     created_at, updated_at, created_by, updated_by
     from article
     <where>
@@ -47,19 +46,8 @@
   </select>
 
   <select id="findById" parameterType="long" resultType="enjoytrip.article.domain.Article">
-    select id,
-           member_id,
-           title,
-           content,
-           image_name,
-           image_uuid,
-           views,
-           address,
-           type,
-           created_at,
-           updated_at,
-           created_by,
-           updated_by
+    select id, member_id, title, content, views, address, type, directory_uuid,
+           created_at, updated_at, created_by, updated_by
     from article
     where id = #{id}
   </select>
@@ -70,8 +58,7 @@
     set member_id  = #{memberId},
         title      = #{title},
         content    = #{content},
-        image_name = #{imageName},
-        image_uuid = #{imageUUID},
+        directory_uuid = #{directoryUUID},
         views      = #{views},
         type       = #{articleType},
         address    = #{address},

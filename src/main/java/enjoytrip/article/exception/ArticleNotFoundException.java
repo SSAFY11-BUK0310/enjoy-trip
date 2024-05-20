@@ -12,5 +12,5 @@ public class ArticleNotFoundException extends BusinessException {
     public ArticleNotFoundException(ErrorCode errorCode, String message, Throwable cause) {
         super(errorCode, message, cause);
     }
-    
+
 }

@@ -1,4 +1,4 @@
-package enjoytrip.article.util.file;
+package enjoytrip.global.image;
 
 import lombok.Builder;
 import lombok.Getter;
