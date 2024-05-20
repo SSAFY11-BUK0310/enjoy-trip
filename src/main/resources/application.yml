@@ -3,7 +3,7 @@ spring:
     url: jdbc:mysql://localhost:3306/enjoytrip?serverTimezone=UTC
     driverClassName: com.mysql.cj.jdbc.Driver
     username: root
-    password: dnjsdud1346@
+    password: 1234
   servlet:
     multipart:
       maxFileSize: 10MB
@@ -12,6 +12,5 @@ spring:
 mybatis:
   config-location: classpath:/config/mybatis-config.xml
 
-#  C:/Users/dnjsd/enjoytrip/file/
 file:
-  dir: C:/Users/dnjsd/enjoytrip/file/
+  dir: C:/tmp/

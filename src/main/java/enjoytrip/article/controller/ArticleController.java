@@ -63,9 +63,15 @@ public class ArticleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> delete(@PathVariable("id") Long id) throws IOException {
+    public ResponseEntity<Void> delete(@PathVariable("id") Long id) throws IOException {
         articleService.delete(id);
         //204(No Content) : 작업이 수행되었으며 별도로 내용을 반환할게 없을 때.
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PostMapping("/{id}/views")
+    public ResponseEntity<Long> updateViews(@PathVariable("id") Long id) {
+        Long views = articleService.updateViews(id);
+        return ResponseEntity.status(HttpStatus.OK).body(views);
     }
 }

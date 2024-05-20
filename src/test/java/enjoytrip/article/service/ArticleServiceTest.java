@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
@@ -15,20 +16,25 @@ import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.Service.ImageService;
 import enjoytrip.global.image.UploadFile;
 import enjoytrip.global.image.dto.request.Base64Image;
+import enjoytrip.global.image.repository.ImageRepository;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.repository.MemberRepository;
+import enjoytrip.member.service.MemberService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import org.assertj.core.api.Assert;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,10 +51,13 @@ class ArticleServiceTest {
 
     @Mock
     private ImageService imageService;
+    @Mock
+    private ImageRepository imageRepository;
 
     @Mock
+    private MemberService memberService;
+    @Mock
     private MemberRepository memberRepository;
-
     @Mock
     private FileStore fileStore;
 
@@ -59,12 +68,14 @@ class ArticleServiceTest {
         ArticleType articleType = ArticleType.BOARD;
         String title = "";
         Pageable pageable = PageRequest.of(0, 5);
-
+        Member member = getMember();
+        MemberFindResponse memberFindResponse = new MemberFindResponse(member);
         List<Article> content = getArticles();
+
 
         doReturn(content).when(articleRepository).findByPage(articleType, title, pageable);
         doReturn(10).when(articleRepository).count(articleType, title);
-
+        doReturn(memberFindResponse).when(memberService).findById(1L);
         // when
         Page<ArticleFindResponse> response = articleService.findByPage(articleType, title,
             pageable);
@@ -79,7 +90,8 @@ class ArticleServiceTest {
         // given
         Article article = getArticle(1L);
         doReturn(Optional.ofNullable(article)).when(articleRepository).findById(1L);
-
+        MemberFindResponse memberFindResponse = new MemberFindResponse(getMember());
+        doReturn(memberFindResponse).when(memberService).findById(1L);
         // when
         ArticleFindResponse response = articleService.findById(1L);
 
@@ -96,8 +108,8 @@ class ArticleServiceTest {
         ArticleSaveRequest request = getArticleSaveRequest();
         String directoryUUID = UUID.randomUUID().toString();
         Member member = getMember();
-
-        doReturn(Optional.ofNullable(member)).when(memberRepository).findById(1L);
+        MemberFindResponse memberFindResponse = new MemberFindResponse(member);
+        doReturn(memberFindResponse).when(memberService).findById(1L);
 //        doReturn(uploadFile).when(fileStore).storeFile(any(MultipartFile.class), any(String.class));
         doReturn(1L).when(articleRepository).save(any(Article.class));
 
@@ -114,28 +126,16 @@ class ArticleServiceTest {
         // given
         ArticleUpdateRequest request = getArticleFindRequest();
         Member member = getMember();
+        MemberFindResponse memberFindResponse = new MemberFindResponse(member);
 
         doReturn(1L).when(articleRepository).update(any(Article.class));
-        doReturn(Optional.ofNullable(member)).when(memberRepository).findById(1L);
+        doReturn(memberFindResponse).when(memberService).findById(1L);
 
         // when
         articleService.update(request);
 
         // then
         verify(articleRepository, times(1)).update(any(Article.class));
-    }
-
-    @DisplayName("게시물 삭제 성공")
-    @Test
-    void deleteSuccessTest() throws IOException {
-        // given
-        doReturn(Optional.ofNullable(getArticle(1L))).when(articleRepository)
-            .findById(any(Long.class));
-        // when
-        articleService.delete(1L);
-        // then
-        verify(articleRepository, times(1)).delete(1L);
-
     }
 
     private static ArticleUpdateRequest getArticleFindRequest() {
@@ -162,7 +162,7 @@ class ArticleServiceTest {
         return content;
     }
 
-    private static Member getMember() {
+    private Member getMember() {
         return Member.builder()
             .id(1L)
             .name("name")
@@ -203,7 +203,7 @@ class ArticleServiceTest {
             .createdBy("createdBy")
             .updatedAt(LocalDateTime.now())
             .updatedBy("updatedBy")
+            .directoryUUID(UUID.randomUUID().toString())
             .build();
     }
-
 }

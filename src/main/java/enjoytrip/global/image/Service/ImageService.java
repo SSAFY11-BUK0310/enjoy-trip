@@ -3,7 +3,7 @@ package enjoytrip.global.image.Service;
 import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.UploadFile;
 import enjoytrip.global.image.domain.Image;
-import enjoytrip.global.image.dto.request.ImageSave2ImageStorageRequestDto;
+import enjoytrip.global.image.dto.request.ImageSave2ImageStorageRequest;
 import enjoytrip.global.image.dto.response.ImageSaveResponseDto;
 import enjoytrip.global.image.repository.ImageRepository;
 import java.io.IOException;
@@ -22,7 +22,7 @@ public class ImageService {
     private final FileStore fileStore;
 
     // 이미지를 이미지 저장소까지만 저장하고, 데이터베이스에는 저장하지 않는다.
-    public ImageSaveResponseDto save2ImageStorage(ImageSave2ImageStorageRequestDto request)
+    public ImageSaveResponseDto save2ImageStorage(ImageSave2ImageStorageRequest request)
         throws IOException {
         MultipartFile multipartFile = getMultipartFile(request);
         UploadFile uploadFile = fileStore.storeFile(multipartFile, request.getDirectoryUUID());
@@ -60,7 +60,7 @@ public class ImageService {
         return imageRepository.deleteByDirectoryUUID(directoryUUID);
     }
 
-    private MultipartFile getMultipartFile(ImageSave2ImageStorageRequestDto request) {
+    private MultipartFile getMultipartFile(ImageSave2ImageStorageRequest request) {
 
         String fileName = request.getOriginalName();
         String base64File = request.getBase64File();

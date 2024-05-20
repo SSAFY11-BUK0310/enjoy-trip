@@ -20,14 +20,18 @@ import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.Service.ImageService;
 import enjoytrip.global.image.domain.Image;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.repository.MemberRepository;
+import enjoytrip.member.service.MemberService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +47,7 @@ public class ArticleService {
 
     private final ArticleRepository articleRepository;
     private final ImageService imageService;
+    private final MemberService memberService;
     private final MemberRepository memberRepository;
     private final FileStore fileStore;
 
@@ -50,8 +55,7 @@ public class ArticleService {
     public ArticleSaveResponse save(ArticleSaveRequest request) throws Exception {
 
         ArticleSaveResponse response = new ArticleSaveResponse();
-        Member findMember = memberRepository.findById(request.getMemberId()).orElseThrow(
-            () -> new MemberNotFoundException(MEMBER_NOT_FOUND, "does not exist member"));
+        MemberFindResponse findMember = memberService.findById(request.getMemberId());
 
         // article 테이블에 등록
         LocalDateTime now = LocalDateTime.now();
@@ -64,9 +68,9 @@ public class ArticleService {
             .address(request.getAddress())
             .directoryUUID(request.getDirectoryUUID())
             .createdAt(now)
-            .createdBy(findMember.getName())
+            .createdBy(findMember.getEmail())
             .updatedAt(now)
-            .createdBy(findMember.getName())
+            .createdBy(findMember.getEmail())
             .build();
 
         Long articleSaveResult = articleRepository.save(newArticle);
@@ -87,9 +91,9 @@ public class ArticleService {
                 .imageUUID(selectedImage)
                 .directoryUUID(directoryUUID)
                 .createdAt(now)
-                .createdBy(findMember.getName())
+                .createdBy(findMember.getEmail())
                 .updatedAt(now)
-                .updatedBy(findMember.getName())
+                .updatedBy(findMember.getEmail())
                 .build();
 
             imageService.saveToDB(newImage);
@@ -115,14 +119,15 @@ public class ArticleService {
     public ArticleFindResponse findById(Long id) {
         Article findArticle = articleRepository.findById(id).orElseThrow(
             () -> new ArticleNotFoundException(ARTICLE_NOT_FOUND, "does not exist article"));
-        return new ArticleFindResponse(findArticle);
+        ArticleFindResponse response = new ArticleFindResponse(findArticle);
+        addExtraData(findArticle, response);
+        return response;
     }
 
     @Transactional
     public ArticleUpdateResponse update(ArticleUpdateRequest request) throws Exception {
         ArticleUpdateResponse response = new ArticleUpdateResponse();
-        Member findMember = memberRepository.findById(request.getMemberId()).orElseThrow(
-            () -> new MemberNotFoundException(MEMBER_NOT_FOUND, "does not exist member"));
+        MemberFindResponse findMember = memberService.findById(request.getMemberId());
         // 게시물 갱신
         LocalDateTime now = LocalDateTime.now();
         Article newArticle = Article.builder()
@@ -135,7 +140,7 @@ public class ArticleService {
             .articleType(request.getArticleType())
             .directoryUUID(request.getDirectoryUUID())
             .updatedAt(now)
-            .updatedBy(findMember.getName())
+            .updatedBy(findMember.getEmail())
             .build();
 
         Long articleUpdateResult = articleRepository.update(newArticle);
@@ -158,9 +163,9 @@ public class ArticleService {
                 .imageUUID(selectedImage)
                 .directoryUUID(directoryUUID)
                 .createdAt(now)
-                .createdBy(findMember.getName())
+                .createdBy(findMember.getEmail())
                 .updatedAt(now)
-                .updatedBy(findMember.getName())
+                .updatedBy(findMember.getEmail())
                 .build();
             imageService.saveToDB(newImage);
 
@@ -189,14 +194,24 @@ public class ArticleService {
         articleRepository.delete(id);
     }
 
+    public Long updateViews(Long id) {
+        return articleRepository.updateViews(id);
+    }
+
     private List<ArticleFindResponse> getArticleFindResponseList(List<Article> content) {
         List<ArticleFindResponse> articleFindResponseList = new ArrayList<>();
         for (Article article : content) {
             ArticleFindResponse articleFindResponse = new ArticleFindResponse(article);
-            List<Image> images = imageService.findByArticleId(article.getId());
-            articleFindResponse.addImages(images);
+            addExtraData(article, articleFindResponse);
             articleFindResponseList.add(articleFindResponse);
         }
         return articleFindResponseList;
+    }
+
+    public void addExtraData(Article article, ArticleFindResponse articleFindResponse) {
+        List<Image> images = imageService.findByArticleId(article.getId());
+        articleFindResponse.addImages(images);
+        MemberFindResponse findMember = memberService.findById(article.getMemberId());
+        articleFindResponse.addMemberName(findMember.getName());
     }
 }
