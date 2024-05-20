@@ -13,6 +13,7 @@ import enjoytrip.member.dto.response.MemberUpdateResponse;
 import enjoytrip.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,7 +32,7 @@ public class MemberController {
 
   @PostMapping
   public ResponseEntity<MemberSaveResponse> save(
-      @RequestBody MemberSaveRequest memberSaveRequest) {
+      @Validated @RequestBody MemberSaveRequest memberSaveRequest) {
     MemberSaveResponse memberSaveResponse = memberService.save(memberSaveRequest);
     return ResponseEntity.status(CREATED).body(memberSaveResponse);
   }
@@ -44,14 +45,14 @@ public class MemberController {
 
   @PutMapping("/{id}")
   public ResponseEntity<MemberUpdateResponse> updateInfo(
-      @RequestBody MemberUpdateRequest memberUpdateRequest) {
+      @Validated @RequestBody MemberUpdateRequest memberUpdateRequest) {
     MemberUpdateResponse memberUpdateResponse = memberService.updateInfo(memberUpdateRequest);
     return ResponseEntity.status(OK).body(memberUpdateResponse);
   }
 
   @PutMapping("/{id}/password")
   public ResponseEntity<MemberUpdateResponse> updatePassword(
-      @RequestBody MemberPasswordUpdateRequest passwordUpdateRequest) {
+      @Validated @RequestBody MemberPasswordUpdateRequest passwordUpdateRequest) {
     MemberUpdateResponse memberUpdateResponse = memberService.updatePassword(passwordUpdateRequest);
     return ResponseEntity.status(OK).body(memberUpdateResponse);
   }
