@@ -34,7 +34,7 @@ public class AuthController {
     HttpSession session = httpRequest.getSession();
     session.setAttribute(LOGIN_USER_ID.name(), response.getId());
     return ResponseEntity.status(CREATED)
-        .body(new MemberLoginResponse(response.getId()));
+        .body(new MemberLoginResponse(response.getId(), response.getName()));
   }
 
 

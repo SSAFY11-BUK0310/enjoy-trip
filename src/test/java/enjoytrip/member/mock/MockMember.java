@@ -18,10 +18,14 @@ public class MockMember extends Member {
         createdBy, updatedBy);
   }
 
-  @Override
-  public void update(String email, String password, String name, Integer age, Gender gender,
+  public void updateInfo(String name, Integer age, Gender gender,
       String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
-    super.update(email, password, name, age, gender, phoneNumber, updatedAt, updatedBy);
+    super.updateInfo(name, age, gender, phoneNumber, updatedAt, updatedBy);
+    isUpdated = true;
+  }
+
+  public void updatePassword(String password) {
+    super.updatePassword(password);
     isUpdated = true;
   }
 }

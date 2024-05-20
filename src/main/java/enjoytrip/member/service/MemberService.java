@@ -2,12 +2,15 @@ package enjoytrip.member.service;
 
 import static enjoytrip.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
+import enjoytrip.global.exception.ErrorCode;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.dto.request.MemberPasswordUpdateRequest;
 import enjoytrip.member.dto.request.MemberSaveRequest;
 import enjoytrip.member.dto.request.MemberUpdateRequest;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.dto.response.MemberSaveResponse;
 import enjoytrip.member.dto.response.MemberUpdateResponse;
+import enjoytrip.member.exception.IncorrectPasswordException;
 import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.repository.MemberRepository;
 import java.time.LocalDateTime;
@@ -48,11 +51,9 @@ public class MemberService {
     return new MemberFindResponse(findMember);
   }
 
-  public MemberUpdateResponse update(MemberUpdateRequest request) {
+  public MemberUpdateResponse updateInfo(MemberUpdateRequest request) {
     Member findMember = getMemberById(request.getId());
-    findMember.update(
-        request.getEmail(),
-        request.getPassword(),
+    findMember.updateInfo(
         request.getName(),
         request.getAge(),
         request.getGender(),
@@ -60,6 +61,14 @@ public class MemberService {
         LocalDateTime.now(),
         request.getUpdatedBy()
     );
+    return new MemberUpdateResponse(memberRepository.update(findMember));
+  }
+
+  public MemberUpdateResponse updatePassword(MemberPasswordUpdateRequest request) {
+    Member findMember = getMemberById(request.getId());
+    checkOriginPassword(findMember.getPassword(), request.getCurrentPassword());
+    checkNewPassword(request.getNewPassword(), request.getCheckPassword());
+    findMember.updatePassword(request.getNewPassword());
     return new MemberUpdateResponse(memberRepository.update(findMember));
   }
 
@@ -75,5 +84,19 @@ public class MemberService {
   private Member getMemberByEmail(String email) {
     return memberRepository.findByEmail(email)
         .orElseThrow(() -> new MemberNotFoundException(MEMBER_NOT_FOUND, "does not exist member"));
+  }
+
+  private void checkOriginPassword(String originPassword, String requestedPassword) {
+    if (!originPassword.equals(requestedPassword)) {
+      throw new IncorrectPasswordException(ErrorCode.INCORRECT_PASSWORD,
+          "mismatch with existing password");
+    }
+  }
+
+  private void checkNewPassword(String newPassword, String checkPassword) {
+    if (!newPassword.equals(checkPassword)) {
+      throw new IncorrectPasswordException(ErrorCode.INCORRECT_PASSWORD,
+          "new passwords do not match");
+    }
   }
 }

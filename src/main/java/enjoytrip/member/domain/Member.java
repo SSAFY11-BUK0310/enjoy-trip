@@ -32,15 +32,17 @@ public class Member extends BaseEntity {
     this.roleType = roleType;
   }
 
-  public void update(String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
-    this.email = email;
-    this.password = password;
+  public void updateInfo(String name, Integer age, Gender gender, String phoneNumber,
+      LocalDateTime updatedAt, String updatedBy) {
     this.name = name;
     this.age = age;
     this.gender = gender;
     this.phoneNumber = phoneNumber;
     changeUpdatedAt(updatedAt);
     changeUpdatedBy(updatedBy);
+  }
+
+  public void updatePassword(String password) {
+    this.password = password;
   }
 }
