@@ -26,6 +26,7 @@ public class ArticleFindResponse {
     private String createdBy;
     private String updatedBy;
     private List<Image> images; // 게시물에 대한 이미지 목록
+    private String memberEmail;
 
     public ArticleFindResponse(Article article) {
         this.id = article.getId();
@@ -45,4 +46,6 @@ public class ArticleFindResponse {
     public void addImages(List<Image> images) {
         this.images = images;
     }
+    public void addMemberEmail(String memberEmail) {
+        this.memberEmail = memberEmail;}
 }
