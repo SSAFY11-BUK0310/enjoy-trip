@@ -40,13 +40,9 @@ public class MessageService {
     return new MessageSaveResponse(newMessage.getId());
   }
 
-  public MessageFindResponse findById(Long id) {
-    Message findMessage = getMessage(id);
-    return new MessageFindResponse(findMessage);
-  }
-
   public Page<MessageFindResponse> findByMessageRoomId(Long messageRoomId, Pageable pageable) {
-    List<MessageFindResponse> messageList = messageRepository.findByMessageRoomId(messageRoomId, pageable)
+    List<MessageFindResponse> messageList = messageRepository.findByMessageRoomId(messageRoomId,
+            pageable)
         .stream().map(MessageFindResponse::new).toList();
     Integer total = messageRepository.countByMessageRoomId(messageRoomId);
     return new PageImpl<>(messageList, pageable, total);
@@ -64,8 +60,11 @@ public class MessageService {
   }
 
   public void delete(Long id) {
-    Message findMessage = getMessage(id);
-    messageRepository.delete(findMessage.getId());
+    messageRepository.delete(id);
+  }
+
+  public void deleteByMessageRoomId(Long messageRoomId) {
+    messageRepository.deleteByMessageRoomId(messageRoomId);
   }
 
   private Message getMessage(Long id) {

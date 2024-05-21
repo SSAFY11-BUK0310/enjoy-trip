@@ -34,7 +34,8 @@
     where id = #{id}
   </select>
 
-  <select id="findByMessageRoomId" parameterType="map" resultType="enjoytrip.message.domain.Message">
+  <select id="findByMessageRoomId" parameterType="map"
+    resultType="enjoytrip.message.domain.Message">
     select id,
     member_id,
     message_room_id,
@@ -61,7 +62,7 @@
   <select id="countByMessageRoomId" parameterType="long">
     select count(message_room_id)
     from message
-    where message_room_id=#{messageRoomId}
+    where message_room_id = #{messageRoomId}
 
   </select>
 
@@ -77,5 +78,11 @@
     delete
     from message
     where id = #{id};
+  </delete>
+
+  <delete id="deleteByMessageRoomId" parameterType="long">
+    delete
+    from message
+    where message_room_id = #{messageRoomId};
   </delete>
 </mapper>
