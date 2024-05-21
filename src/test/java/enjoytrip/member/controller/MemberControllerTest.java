@@ -10,6 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
+import enjoytrip.member.domain.RoleType;
 import enjoytrip.member.dto.request.MemberPasswordUpdateRequest;
 import enjoytrip.member.dto.request.MemberSaveRequest;
 import enjoytrip.member.dto.request.MemberUpdateRequest;
@@ -169,9 +170,8 @@ class MemberControllerTest {
         .name("name")
         .age(20)
         .gender(Gender.FEMALE)
+        .roleType(RoleType.BASIC)
         .phoneNumber("010-1234-5678")
-        .createdBy("name")
-        .updatedBy("name")
         .build();
   }
 
@@ -183,6 +183,7 @@ class MemberControllerTest {
         .name("name")
         .age(20)
         .gender(Gender.FEMALE)
+        .roleType(RoleType.BASIC)
         .phoneNumber("010-1234-5678")
         .createAt(LocalDateTime.now())
         .createdBy("name")

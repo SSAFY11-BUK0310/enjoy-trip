@@ -11,7 +11,7 @@
                         content,
                         directory_uuid,
                         views,
-                        type,
+                        article_type,
                         address,
                         created_at,
                         created_by,
@@ -30,7 +30,7 @@
            content,
            views,
            address,
-           type,
+           article_type,
            directory_uuid,
            created_at,
            updated_at,
@@ -39,7 +39,7 @@
     from article
     <where>
       <if test="true">
-        and type=#{articleType}
+        and article_type=#{articleType}
       </if>
       <if test="title != null and title != ''">
         and title like concat('%', #{title}, '%')
@@ -56,9 +56,9 @@
   </select>
 
   <select id="count" parameterType="map">
-    select count(type)
+    select count(article_type)
     from article
-    where type = #{articleType}
+    where article_type = #{articleType}
     <if test="title != null and title != ''">
       and title like concat('%', #{title}, '%');
     </if>
@@ -72,7 +72,7 @@
            content,
            views,
            address,
-           type,
+           article_type,
            directory_uuid,
            created_at,
            updated_at,
@@ -85,15 +85,15 @@
 
   <update id="update" parameterType="enjoytrip.article.domain.Article">
     update article
-    set member_id  = #{memberId},
-        title      = #{title},
-        content    = #{content},
+    set member_id      = #{memberId},
+        title          = #{title},
+        content        = #{content},
         directory_uuid = #{directoryUUID},
-        views      = #{views},
-        type       = #{articleType},
-        address    = #{address},
-        updated_at = #{updatedAt},
-        updated_by = #{updatedBy}
+        views          = #{views},
+        article_type   = #{articleType},
+        address        = #{address},
+        updated_at     = #{updatedAt},
+        updated_by     = #{updatedBy}
     where id = #{id};
   </update>
 
@@ -108,7 +108,7 @@
     from article
     where id=#{id}
   </select>
-  
+
   <update id="updateViews" parameterType="long">
     update article
     set views = views + 1

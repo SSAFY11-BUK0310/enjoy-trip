@@ -20,12 +20,10 @@ public class MockMember extends Member {
 
   public void updateInfo(String name, Integer age, Gender gender,
       String phoneNumber, LocalDateTime updatedAt, String updatedBy) {
-    super.updateInfo(name, age, gender, phoneNumber, updatedAt, updatedBy);
     isUpdated = true;
   }
 
   public void updatePassword(String password) {
-    super.updatePassword(password);
     isUpdated = true;
   }
 }

@@ -15,6 +15,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,8 +28,8 @@ public class AuthController {
   private final MemberService memberService;
 
   @PostMapping("/login")
-  public ResponseEntity<MemberLoginResponse> login(@RequestBody MemberLoginRequest request,
-      HttpServletRequest httpRequest) {
+  public ResponseEntity<MemberLoginResponse> login(
+      @Validated @RequestBody MemberLoginRequest request, HttpServletRequest httpRequest) {
     MemberFindResponse response = getMemberFindResponseWithCheckEmail(request);
     checkPassword(response.getPassword(), request.getPassword());
     HttpSession session = httpRequest.getSession();

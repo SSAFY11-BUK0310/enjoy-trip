@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="enjoytrip.comment.repository.CommentRepository">
+
+  <insert id="save" parameterType="enjoytrip.comment.domain.Comment" useGeneratedKeys="true"
+    keyProperty="id">
+    insert into comment(member_id,
+                        article_id,
+                        parent_id,
+                        content,
+                        created_at,
+                        created_by,
+                        updated_at,
+                        updated_by)
+    values (#{memberId},
+            #{articleId},
+            #{parentId},
+            #{content},
+            #{createdAt},
+            #{createdBy},
+            #{updatedAt},
+            #{updatedBy});
+  </insert>
+
+  <select id="findById" parameterType="long" resultType="enjoytrip.comment.domain.Comment">
+    select id,
+           member_id,
+           article_id,
+           parent_id,
+           content,
+           created_at,
+           updated_at,
+           created_by,
+           updated_by
+    from comment
+    where id = #{id}
+  </select>
+
+  <select id="findByArticleId" parameterType="map" resultType="enjoytrip.comment.domain.Comment">
+    select id,
+    member_id,
+    article_id,
+    parent_id,
+    content,
+    created_at,
+    updated_at,
+    created_by,
+    updated_by
+    from comment
+    <where>
+      <if test="true">
+        and article_id=#{articleId}
+      </if>
+    </where>
+    <if test="pageable.sort != null and !pageable.sort.isEmpty()">
+      order by
+      <foreach collection="pageable.sort" item="order" separator=",">
+        ${order.property} ${order.direction}
+      </foreach>
+    </if>
+    limit #{pageable.pageSize} offset #{pageable.offset};
+  </select>
+
+  <select id="count" parameterType="long">
+    select count(article_id)
+    from comment
+    where article_id=#{articleId}
+
+  </select>
+
+  <update id="update" parameterType="enjoytrip.comment.domain.Comment">
+    update comment
+    set content    = #{content},
+        updated_at = #{updatedAt},
+        updated_by = #{updatedBy}
+    where id = #{id};
+  </update>
+
+  <delete id="delete" parameterType="long">
+    delete
+    from comment
+    where id = #{id};
+  </delete>
+</mapper>
