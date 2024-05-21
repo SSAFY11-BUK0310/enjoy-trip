@@ -11,6 +11,11 @@ spring:
   messages:
     basename: messages
     encoding: UTF-8
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:mysql/schema.sql
+      data-locations: classpath:mysql/data.sql
 
 mybatis:
   config-location: classpath:/config/mybatis-config.xml
