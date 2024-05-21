@@ -10,7 +10,7 @@ public interface LikeRepository {
 
     Long save(Like like);
 
-    Long deleteByArticleIdAndMemberID(@Param("articleId") Long articleId, @Param("memberId") Long memberId);
+    Long delete(@Param("articleId") Long articleId, @Param("memberId") Long memberId);
 
     List<Like> findByArticleId(Long articleId);
 

@@ -2,26 +2,28 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="enjoytrip.like.repository.LikeRepository">
-  <insert id="save" parameterType="enjoytrip.like.domain.Like" useGeneratedKeys="true" keyProperty="id">
+  <insert id="save" parameterType="enjoytrip.like.domain.Like" useGeneratedKeys="true"
+    keyProperty="id">
     insert into likes(member_id, article_id, created_at, created_by, updated_at, updated_by)
       (select #{memberId},
               #{articleId},
-              #{created_at},
+              #{createdAt},
               email,
-              #{updated_at},
+              #{updatedAt},
               email
        from member
        where id = #{memberId});
   </insert>
 
-  <delete id="deleteByArticleIdAndMemberID" parameterType="long">
+  <delete id="delete" parameterType="long">
     delete
     from likes
-    where article_id = #{articleId} and member_id=#{memberId};
+    where article_id = #{articleId}
+      and member_id = #{memberId};
   </delete>
 
   <select id="isExist" parameterType="map" resultType="boolean">
-    select exists(select id from like where article_id = #{articleId} and member_id = #{memberId});
+    select exists(select id from likes where article_id = #{articleId} and member_id = #{memberId});
   </select>
 
   <select id="findByArticleId" parameterType="long" resultType="enjoytrip.like.domain.Like">
@@ -37,7 +39,7 @@
 
   </select>
 
-  <select id="findByMemberId" parameterType="long" resultType="enjoytrip.like.domain.Like" >
+  <select id="findByMemberId" parameterType="long" resultType="enjoytrip.like.domain.Like">
     select id,
            member_id,
            article_id,
@@ -51,6 +53,8 @@
   </select>
 
   <select id="countByArticleId" parameterType="long" resultType="long">
-    select count(*) from likes where article_id = #{articleId}
+    select count(*)
+    from likes
+    where article_id = #{articleId}
   </select>
 </mapper>

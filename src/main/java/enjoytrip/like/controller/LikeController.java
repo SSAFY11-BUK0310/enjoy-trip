@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,16 +27,15 @@ public class LikeController {
     private final LikeService likeService;
 
     @PostMapping
-    public ResponseEntity<LikeSaveResponse> save(LikeSaveRequest request) {
+    public ResponseEntity<LikeSaveResponse> save(@RequestBody LikeSaveRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(likeService.save(request));
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> delete(LikeDeleteRequest request) {
+    public ResponseEntity<Void> delete(@RequestBody LikeDeleteRequest request) {
         likeService.delete(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
-
 
 
     @GetMapping("/{memberId}/memberId")
@@ -54,5 +54,4 @@ public class LikeController {
     public ResponseEntity<Boolean> exists(LikeExistRequest request) {
         return ResponseEntity.status(HttpStatus.OK).body(likeService.exists(request));
     }
-
 }
