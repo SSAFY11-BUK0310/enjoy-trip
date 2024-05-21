@@ -1,5 +1,7 @@
 package enjoytrip.like.controller;
 
+import enjoytrip.like.dto.request.LikeDeleteRequest;
+import enjoytrip.like.dto.request.LikeExistRequest;
 import enjoytrip.like.dto.request.LikeSaveRequest;
 import enjoytrip.like.dto.response.LikeFindResponse;
 import enjoytrip.like.dto.response.LikeSaveResponse;
@@ -28,11 +30,13 @@ public class LikeController {
         return ResponseEntity.status(HttpStatus.CREATED).body(likeService.save(request));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable("id") Long id) {
-        likeService.delete(id);
+    @DeleteMapping
+    public ResponseEntity<Void> delete(LikeDeleteRequest request) {
+        likeService.delete(request);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+
 
     @GetMapping("/{memberId}/memberId")
     public ResponseEntity<List<LikeFindResponse>> findByMemberId(
@@ -45,4 +49,10 @@ public class LikeController {
         @PathVariable("articleId") Long articleId) {
         return ResponseEntity.status(HttpStatus.OK).body(likeService.findByArticleId(articleId));
     }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> exists(LikeExistRequest request) {
+        return ResponseEntity.status(HttpStatus.OK).body(likeService.exists(request));
+    }
+
 }

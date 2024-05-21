@@ -12,5 +12,6 @@
     <mapper resource="mapper/article-query.xml"/>
     <mapper resource="mapper/image-query.xml"/>
     <mapper resource="mapper/comment-query.xml"/>
+    <mapper resource="mapper/like-query.xml"/>
   </mappers>
 </configuration>

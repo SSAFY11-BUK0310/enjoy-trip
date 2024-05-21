@@ -1,6 +1,8 @@
 package enjoytrip.like.service;
 
 import enjoytrip.like.domain.Like;
+import enjoytrip.like.dto.request.LikeDeleteRequest;
+import enjoytrip.like.dto.request.LikeExistRequest;
 import enjoytrip.like.dto.request.LikeSaveRequest;
 import enjoytrip.like.dto.response.LikeFindResponse;
 import enjoytrip.like.dto.response.LikeSaveResponse;
@@ -34,11 +36,8 @@ public class LikeService {
         return response;
     }
 
-    public void delete(Long id) {
-        Long result = likeRepository.delete(id);
-        if (result == 0) {
-            throw new RuntimeException();
-        }
+    public void delete(LikeDeleteRequest request) {
+        likeRepository.deleteByArticleIdAndMemberID(request.getArticleId(), request.getMemberId());
     }
 
     public List<LikeFindResponse> findByArticleId(Long articleId) {
@@ -49,6 +48,14 @@ public class LikeService {
     public List<LikeFindResponse> findByMemberId(Long memberId) {
         List<Like> likes = likeRepository.findByMemberId(memberId);
         return makeLikeFindResponseList(likes);
+    }
+
+    public Long countByArticleId(Long articleId) {
+        return likeRepository.countByArticleId(articleId);
+    }
+
+    public Boolean exists(LikeExistRequest request) {
+        return likeRepository.isExist(request.getArticleId(), request.getMemberId());
     }
 
     private static List<LikeFindResponse> makeLikeFindResponseList(List<Like> likes) {

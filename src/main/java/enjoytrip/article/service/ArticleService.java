@@ -18,6 +18,7 @@ import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.domain.Image;
+import enjoytrip.like.service.LikeService;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.repository.MemberRepository;
 import enjoytrip.member.service.MemberService;
@@ -43,8 +44,8 @@ public class ArticleService {
     private final ArticleRepository articleRepository;
     private final ImageService imageService;
     private final MemberService memberService;
-    private final MemberRepository memberRepository;
     private final FileStore fileStore;
+    private final LikeService likeService;
 
     @Transactional
     public ArticleSaveResponse save(ArticleSaveRequest request) throws Exception {
@@ -115,7 +116,11 @@ public class ArticleService {
         Article findArticle = articleRepository.findById(id).orElseThrow(
             () -> new ArticleNotFoundException(ARTICLE_NOT_FOUND, "does not exist article"));
         ArticleFindResponse response = new ArticleFindResponse(findArticle);
-        addImagesAndMemberEmail(findArticle, response);
+
+        addImages(findArticle.getId(), response);
+        addMemberEmail(findArticle.getMemberId(), response);
+        addLikeCount(findArticle.getId(), response);
+
         return response;
     }
 
@@ -197,16 +202,27 @@ public class ArticleService {
         List<ArticleFindResponse> articleFindResponseList = new ArrayList<>();
         for (Article article : content) {
             ArticleFindResponse articleFindResponse = new ArticleFindResponse(article);
-            addImagesAndMemberEmail(article, articleFindResponse);
+
+            addImages(article.getId(), articleFindResponse);
+            addMemberEmail(article.getMemberId(), articleFindResponse);
+            addLikeCount(article.getId(), articleFindResponse);
+
             articleFindResponseList.add(articleFindResponse);
         }
         return articleFindResponseList;
     }
 
-    public void addImagesAndMemberEmail(Article article, ArticleFindResponse articleFindResponse) {
-        List<Image> images = imageService.findByArticleId(article.getId());
-        articleFindResponse.addImages(images);
-        MemberFindResponse findMember = memberService.findById(article.getMemberId());
-        articleFindResponse.addMemberEmail(findMember.getEmail());
+    public void addImages(Long articleId, ArticleFindResponse response) {
+        List<Image> images = imageService.findByArticleId(articleId);
+        response.addImages(images);
+    }
+
+    public void addMemberEmail(Long memberId, ArticleFindResponse response) {
+        MemberFindResponse findMember = memberService.findById(memberId);
+        response.addMemberEmail(findMember.getEmail());
+    }
+
+    public void addLikeCount(Long articleId, ArticleFindResponse response) {
+        response.addLikeCount(likeService.countByArticleId(articleId));
     }
 }
