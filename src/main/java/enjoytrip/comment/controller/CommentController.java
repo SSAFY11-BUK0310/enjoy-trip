@@ -39,7 +39,8 @@ public class CommentController {
   }
 
   @GetMapping("/{articleId}")
-  public ResponseEntity<Page<CommentFindResponse>> findByBoardId(@PathVariable("articleId") Long articleId,
+  public ResponseEntity<Page<CommentFindResponse>> findByArticleId(
+      @PathVariable("articleId") Long articleId,
       @PageableDefault Pageable pageable) {
     Page<CommentFindResponse> commentPage = commentService.findByArticleId(articleId, pageable);
     return ResponseEntity.status(OK).body(commentPage);
