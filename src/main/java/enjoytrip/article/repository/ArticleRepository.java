@@ -20,7 +20,6 @@ public interface ArticleRepository {
 
     Optional<Article> findById(Long id);
 
-
     Long update(Article article);
 
     void delete(Long id);

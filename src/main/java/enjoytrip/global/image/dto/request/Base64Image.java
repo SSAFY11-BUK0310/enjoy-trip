@@ -1,4 +1,4 @@
-package enjoytrip.article.dto;
+package enjoytrip.global.image.dto.request;
 
 import lombok.Builder;
 import lombok.Getter;

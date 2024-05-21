@@ -13,7 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import enjoytrip.article.domain.ArticleType;
-import enjoytrip.article.dto.Base64Image;
+import enjoytrip.global.image.dto.request.Base64Image;
 import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
@@ -21,6 +21,8 @@ import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.service.ArticleService;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -49,7 +51,6 @@ class ArticleControllerTest {
     public void init() {
         mockMvc = MockMvcBuilders.standaloneSetup(articleController)
             .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver()).build();
-
         objectMapper = new ObjectMapper();
     }
 
@@ -136,20 +137,37 @@ class ArticleControllerTest {
     }
 
     private static ArticleUpdateRequest getArticleUpdateRequest() {
-        return ArticleUpdateRequest.builder().id(1L).memberId(1L).title("title").content("content")
-            .imageName("imageName").imageUUID("imageUUID").base64Image(getBase64Image()).views(0)
-            .address("address").articleType(ArticleType.BOARD).build();
+        return ArticleUpdateRequest.builder()
+            .id(1L)
+            .memberId(1L)
+            .title("title")
+            .content("content")
+            .selectedImages(new ArrayList<>())
+            .notSelectedImages(new ArrayList<>())
+            .directoryUUID(UUID.randomUUID().toString())
+            .views(0)
+            .address("address").articleType(ArticleType.BOARD)
+            .build();
     }
 
     private static ArticleSaveRequest getArticleSaveRequest() {
 
-        return ArticleSaveRequest.builder().memberId(1L).title("title").content("content")
-            .base64Image(getBase64Image()).address("address").articleType(ArticleType.BOARD)
+        return ArticleSaveRequest.builder()
+            .memberId(1L)
+            .title("title")
+            .content("content")
+            .notSelectedImages(new ArrayList<>())
+            .selectedImages(new ArrayList<>())
+            .directoryUUID(UUID.randomUUID().toString())
+            .address("address")
+            .articleType(ArticleType.TRIP)
             .build();
     }
 
     private static Base64Image getBase64Image() {
-        return Base64Image.builder().originalName("originalName").base64File("base64File")
+        return Base64Image.builder()
+            .originalName("originalName")
+            .base64File("base64File")
             .extension("extension").build();
     }
 }
