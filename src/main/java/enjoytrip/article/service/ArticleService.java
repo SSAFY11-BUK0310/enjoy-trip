@@ -115,7 +115,7 @@ public class ArticleService {
         Article findArticle = articleRepository.findById(id).orElseThrow(
             () -> new ArticleNotFoundException(ARTICLE_NOT_FOUND, "does not exist article"));
         ArticleFindResponse response = new ArticleFindResponse(findArticle);
-        addImagesAndMemberName(findArticle, response);
+        addImagesAndMemberEmail(findArticle, response);
         return response;
     }
 
@@ -197,16 +197,16 @@ public class ArticleService {
         List<ArticleFindResponse> articleFindResponseList = new ArrayList<>();
         for (Article article : content) {
             ArticleFindResponse articleFindResponse = new ArticleFindResponse(article);
-            addImagesAndMemberName(article, articleFindResponse);
+            addImagesAndMemberEmail(article, articleFindResponse);
             articleFindResponseList.add(articleFindResponse);
         }
         return articleFindResponseList;
     }
 
-    public void addImagesAndMemberName(Article article, ArticleFindResponse articleFindResponse) {
+    public void addImagesAndMemberEmail(Article article, ArticleFindResponse articleFindResponse) {
         List<Image> images = imageService.findByArticleId(article.getId());
         articleFindResponse.addImages(images);
         MemberFindResponse findMember = memberService.findById(article.getMemberId());
-        articleFindResponse.addMemberName(findMember.getName());
+        articleFindResponse.addMemberEmail(findMember.getEmail());
     }
 }
