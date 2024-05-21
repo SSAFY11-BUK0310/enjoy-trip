@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor
-public class ImageSave2ImageStorageRequestDto {
+public class ImageSave2ImageStorageRequest {
 
     private String originalName;
     private String mimeType;
