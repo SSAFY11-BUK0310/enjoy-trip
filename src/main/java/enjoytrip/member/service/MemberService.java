@@ -24,18 +24,20 @@ public class MemberService {
   private final MemberRepository memberRepository;
 
   public MemberSaveResponse save(MemberSaveRequest request) {
+    LocalDateTime currentTime = LocalDateTime.now();
+    String email = request.getEmail();
     Member newMember = Member.builder()
-        .email(request.getEmail())
+        .email(email)
         .password(request.getPassword())
         .name(request.getName())
         .age(request.getAge())
         .gender(request.getGender())
         .phoneNumber(request.getPhoneNumber())
         .roleType(request.getRoleType())
-        .createAt(LocalDateTime.now())
-        .updatedAt(LocalDateTime.now())
-        .createdBy(request.getCreatedBy())
-        .updatedBy(request.getUpdatedBy())
+        .createAt(currentTime)
+        .updatedAt(currentTime)
+        .createdBy(email)
+        .updatedBy(email)
         .build();
     memberRepository.save(newMember);
     return new MemberSaveResponse(newMember.getId());

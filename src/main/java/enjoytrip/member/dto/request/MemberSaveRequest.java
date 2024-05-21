@@ -12,6 +12,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @NoArgsConstructor
 public class MemberSaveRequest {
@@ -35,14 +37,10 @@ public class MemberSaveRequest {
   private String phoneNumber;
   @NotNull(message = "{NotNull.roleType}")
   private RoleType roleType;
-  @NotBlank(message = "{NotBlank.createdBy}")
-  private String createdBy;
-  @NotBlank(message = "{NotBlank.updatedBy}")
-  private String updatedBy;
 
   @Builder
   public MemberSaveRequest(String email, String password, String name, Integer age, Gender gender,
-      String phoneNumber, RoleType roleType, String createdBy, String updatedBy) {
+      String phoneNumber, RoleType roleType) {
     this.email = email;
     this.password = password;
     this.name = name;
@@ -50,7 +48,5 @@ public class MemberSaveRequest {
     this.gender = gender;
     this.phoneNumber = phoneNumber;
     this.roleType = roleType;
-    this.createdBy = createdBy;
-    this.updatedBy = updatedBy;
   }
 }
