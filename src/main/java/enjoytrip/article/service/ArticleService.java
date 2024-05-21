@@ -3,7 +3,6 @@ package enjoytrip.article.service;
 import static enjoytrip.global.exception.ErrorCode.ARTICLE_NOT_FOUND;
 import static enjoytrip.global.exception.ErrorCode.ARTICLE_SAVE_FAILED;
 import static enjoytrip.global.exception.ErrorCode.ARTICLE_UPDATE_FAILED;
-import static enjoytrip.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 import enjoytrip.article.domain.Article;
 import enjoytrip.article.domain.ArticleType;
@@ -19,19 +18,15 @@ import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.Service.ImageService;
 import enjoytrip.global.image.domain.Image;
-import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.response.MemberFindResponse;
-import enjoytrip.member.exception.MemberNotFoundException;
 import enjoytrip.member.repository.MemberRepository;
 import enjoytrip.member.service.MemberService;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -120,7 +115,7 @@ public class ArticleService {
         Article findArticle = articleRepository.findById(id).orElseThrow(
             () -> new ArticleNotFoundException(ARTICLE_NOT_FOUND, "does not exist article"));
         ArticleFindResponse response = new ArticleFindResponse(findArticle);
-        addExtraData(findArticle, response);
+        addImagesAndMemberName(findArticle, response);
         return response;
     }
 
@@ -202,13 +197,13 @@ public class ArticleService {
         List<ArticleFindResponse> articleFindResponseList = new ArrayList<>();
         for (Article article : content) {
             ArticleFindResponse articleFindResponse = new ArticleFindResponse(article);
-            addExtraData(article, articleFindResponse);
+            addImagesAndMemberName(article, articleFindResponse);
             articleFindResponseList.add(articleFindResponse);
         }
         return articleFindResponseList;
     }
 
-    public void addExtraData(Article article, ArticleFindResponse articleFindResponse) {
+    public void addImagesAndMemberName(Article article, ArticleFindResponse articleFindResponse) {
         List<Image> images = imageService.findByArticleId(article.getId());
         articleFindResponse.addImages(images);
         MemberFindResponse findMember = memberService.findById(article.getMemberId());
