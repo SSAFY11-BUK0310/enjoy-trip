@@ -1,4 +1,4 @@
-package enjoytrip.global.image.Service;
+package enjoytrip.global.image.service;
 
 import enjoytrip.global.image.FileStore;
 import enjoytrip.global.image.UploadFile;

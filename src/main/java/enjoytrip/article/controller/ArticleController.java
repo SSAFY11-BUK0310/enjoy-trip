@@ -7,14 +7,18 @@ import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.service.ArticleService;
+import jakarta.servlet.http.Cookie;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -36,6 +40,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/articles")
 public class ArticleController {
 
+    public static final String VIEW_COUNTS = "viewCounts";
     private final ArticleService articleService;
 
     @PostMapping
@@ -52,9 +57,16 @@ public class ArticleController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ArticleFindResponse> findById(@PathVariable("id") Long id) {
-        return ResponseEntity.status(HttpStatus.OK).body(articleService.findById(id));
+    public ResponseEntity<ArticleFindResponse> findById(@PathVariable("id") Long id,
+        @CookieValue(name = VIEW_COUNTS, required = false) Cookie cookie) {
+
+        String value = setCookieValueAndUpdateViews(id, cookie);
+        ResponseCookie newCookie = getResponseCookie(value);
+
+        return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE,
+            String.valueOf(newCookie)).body(articleService.findById(id));
     }
+
 
     @PutMapping(value = "/{id}", consumes = "application/json")
     public ResponseEntity<ArticleUpdateResponse> update(@RequestBody ArticleUpdateRequest request)
@@ -69,9 +81,25 @@ public class ArticleController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
-    @PostMapping("/{id}/views")
-    public ResponseEntity<Void> updateViews(@PathVariable("id") Long id) {
-        articleService.updateViews(id);
-        return ResponseEntity.status(HttpStatus.OK).build();
+    private String setCookieValueAndUpdateViews(Long id, Cookie cookie) {
+        if (cookie == null) {
+            articleService.updateViews(id);
+            return  "[" + id + "]";
+        }
+        if(!cookie.getValue().contains("["+ id +"]")){
+            articleService.updateViews(id);
+            return cookie.getValue() + "[" + id + "]";
+        }
+        return cookie.getValue();
+    }
+
+    private static ResponseCookie getResponseCookie(String value) {
+        return ResponseCookie
+            .from(VIEW_COUNTS, value)
+            .path("/")
+            .httpOnly(true)
+            .secure(true)
+            .sameSite("None")
+            .build();
     }
 }

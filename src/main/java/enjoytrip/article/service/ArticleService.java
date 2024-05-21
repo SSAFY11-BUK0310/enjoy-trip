@@ -16,7 +16,7 @@ import enjoytrip.article.exception.ArticleSaveFailedException;
 import enjoytrip.article.exception.ArticleUpdateFailedException;
 import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.global.image.FileStore;
-import enjoytrip.global.image.Service.ImageService;
+import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.domain.Image;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.repository.MemberRepository;

@@ -1,7 +1,7 @@
 package enjoytrip.global.image.controller;
 
 import enjoytrip.global.image.FileStore;
-import enjoytrip.global.image.Service.ImageService;
+import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.domain.Image;
 import enjoytrip.global.image.dto.request.ImageSave2ImageStorageRequest;
 import enjoytrip.global.image.dto.response.ImageSaveResponseDto;
