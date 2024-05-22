@@ -32,7 +32,6 @@ public class LikeService {
             throw new RuntimeException();
         }
         LikeSaveResponse response = new LikeSaveResponse();
-        System.out.println("newLike.getId() = " + newLike.getId());
         response.addId(newLike.getId());
         return response;
     }
