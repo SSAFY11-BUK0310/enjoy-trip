@@ -1,6 +1,10 @@
 package enjoytrip.article.dto.request;
 
 import enjoytrip.article.domain.ArticleType;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,13 +16,20 @@ public class ArticleUpdateRequest {
 
     private Long id;
     private Long memberId;
+    @NotBlank(message = "{NotBlank.title}")
     private String title;
+    @NotBlank(message = "{NotBlank.content}")
     private String content;
+    @NotNull
     private List<String> selectedImages; // DB에 저장되어야 하는 이미지 목록
+    @NotNull
     private List<String> notSelectedImages; // 이미지 저장소에서 제거되어야 이미지 목록
+    @NotNull
     private String directoryUUID; // 게시물에 대한 이미지 저장소 디렉토리
+    @DecimalMin(value = "0", message = "{DecimalMin}")
     private Integer views;
     private String address;
+    @NotNull(message = "{NotBlank}")
     private ArticleType articleType;
 
     @Builder

@@ -11,8 +11,9 @@ import enjoytrip.article.dto.request.ArticleSaveRequest;
 import enjoytrip.article.dto.request.ArticleUpdateRequest;
 import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.repository.ArticleRepository;
-import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.dto.request.Base64Image;
+import enjoytrip.global.image.service.ImageService;
+import enjoytrip.like.service.LikeService;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.service.MemberService;
@@ -44,6 +45,8 @@ class ArticleServiceTest {
     @Mock
     private ImageService imageService;
 
+    @Mock
+    LikeService likeService;
 
     @Mock
     private MemberService memberService;
@@ -63,6 +66,7 @@ class ArticleServiceTest {
         doReturn(content).when(articleRepository).findByPage(articleType, title, pageable);
         doReturn(10).when(articleRepository).count(articleType, title);
         doReturn(memberFindResponse).when(memberService).findById(1L);
+        doReturn(1L).when(likeService).countByArticleId(any(Long.class));
         // when
         Page<ArticleFindResponse> response = articleService.findByPage(articleType, title,
             pageable);
@@ -79,6 +83,7 @@ class ArticleServiceTest {
         doReturn(Optional.ofNullable(article)).when(articleRepository).findById(1L);
         MemberFindResponse memberFindResponse = new MemberFindResponse(getMember());
         doReturn(memberFindResponse).when(memberService).findById(1L);
+        doReturn(1L).when(likeService).countByArticleId(any(Long.class));
         // when
         ArticleFindResponse response = articleService.findById(1L);
 

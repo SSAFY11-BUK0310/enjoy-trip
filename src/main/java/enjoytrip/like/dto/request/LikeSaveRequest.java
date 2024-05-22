@@ -1,5 +1,6 @@
 package enjoytrip.like.dto.request;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class LikeSaveRequest {
 
+    @NotNull
     private Long memberId;
+    @NotNull
     private Long articleId;
 
     @Builder

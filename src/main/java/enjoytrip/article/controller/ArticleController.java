@@ -8,6 +8,7 @@ import enjoytrip.article.dto.response.ArticleSaveResponse;
 import enjoytrip.article.dto.response.ArticleUpdateResponse;
 import enjoytrip.article.service.ArticleService;
 import jakarta.servlet.http.Cookie;
+import jakarta.validation.Valid;
 import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,7 +47,7 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping
-    public ResponseEntity<ArticleSaveResponse> save(@RequestBody ArticleSaveRequest request)
+    public ResponseEntity<ArticleSaveResponse> save(@Valid @RequestBody ArticleSaveRequest request)
         throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED).body(articleService.save(request));
     }
@@ -69,7 +72,8 @@ public class ArticleController {
 
 
     @PutMapping(value = "/{id}", consumes = "application/json")
-    public ResponseEntity<ArticleUpdateResponse> update(@RequestBody ArticleUpdateRequest request)
+    public ResponseEntity<ArticleUpdateResponse> update(
+        @Validated @RequestBody ArticleUpdateRequest request)
         throws Exception {
         return ResponseEntity.status(HttpStatus.OK).body(articleService.update(request));
     }
@@ -84,9 +88,9 @@ public class ArticleController {
     private String setCookieValueAndUpdateViews(Long id, Cookie cookie) {
         if (cookie == null) {
             articleService.updateViews(id);
-            return  "[" + id + "]";
+            return "[" + id + "]";
         }
-        if(!cookie.getValue().contains("["+ id +"]")){
+        if (!cookie.getValue().contains("[" + id + "]")) {
             articleService.updateViews(id);
             return cookie.getValue() + "[" + id + "]";
         }
