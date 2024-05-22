@@ -65,13 +65,14 @@
   <select id="count" parameterType="long">
     select count(article_id)
     from comment
-    where article_id=#{articleId}
+    where article_id = #{articleId}
 
   </select>
 
   <update id="update" parameterType="enjoytrip.comment.domain.Comment">
     update comment
-    set content    = #{content},
+    set parent_id  = #{parentId},
+        content    = #{content},
         updated_at = #{updatedAt},
         updated_by = #{updatedBy}
     where id = #{id};
@@ -81,5 +82,12 @@
     delete
     from comment
     where id = #{id};
+  </delete>
+
+  <delete id="deleteByParentId" parameterType="long">
+    delete
+    from comment
+    where id != #{parentId}
+      and parent_id = #{parentId};
   </delete>
 </mapper>

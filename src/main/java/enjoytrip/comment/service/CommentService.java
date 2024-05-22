@@ -39,6 +39,7 @@ public class CommentService {
         .updatedBy(writer)
         .build();
     commentRepository.save(newComment);
+    addParentIdToParentComment(newComment);
     return new CommentSaveResponse(newComment.getId());
   }
 
@@ -67,12 +68,27 @@ public class CommentService {
   }
 
   public void delete(Long id) {
+    Comment findComment = getCommentById(id);
+    deleteChildComments(findComment);
     commentRepository.delete(id);
+  }
+
+  private void deleteChildComments(Comment findComment) {
+    if (findComment.getParentId().equals(findComment.getId())) {
+      commentRepository.deleteByParentId(findComment.getId());
+    }
   }
 
   private Comment getCommentById(Long id) {
     return commentRepository.findById(id)
         .orElseThrow(
             () -> new CommentNotFoundException(COMMENT_NOT_FOUND, "does not exist Comment"));
+  }
+
+  private void addParentIdToParentComment(Comment newComment) {
+    if (newComment.getParentId() == null) {
+      newComment.addParentId(newComment.getId());
+      commentRepository.update(newComment);
+    }
   }
 }

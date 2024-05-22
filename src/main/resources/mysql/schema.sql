@@ -1,3 +1,5 @@
+drop table if exists message;
+drop table if exists message_room;
 drop table if exists comment;
 drop table if exists image;
 drop table if exists article;
@@ -112,10 +114,6 @@ alter table `comment`
 alter table `comment`
     add constraint comment_article_id
         foreign key (`article_id`) references `article` (`id`);
-
-alter table `comment`
-    add constraint comment_parent_id
-        foreign key (`parent_id`) references `comment` (`id`);
 
 alter table `message`
     add constraint message_member_id

@@ -31,7 +31,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
@@ -46,10 +45,10 @@ class CommentServiceTest {
   MemberService memberService;
 
   @Test
-  @DisplayName("댓글 저장 성공")
-  void save() {
+  @DisplayName("부모 댓글 저장 성공")
+  void saveParent() {
     //given
-    CommentSaveRequest request = getCommentSaveRequest();
+    CommentSaveRequest request = getCommentSaveRequest(null);
     MemberFindResponse findMember = getMemberFindResponse();
     doReturn(findMember).when(memberService).findById(1L);
     doReturn(1L).when(commentRepository).save(any(Comment.class));
@@ -59,6 +58,24 @@ class CommentServiceTest {
 
     //then
     verify(commentRepository, times(1)).save(any(Comment.class));
+    verify(commentRepository, times(1)).update(any(Comment.class));
+  }
+
+  @Test
+  @DisplayName("자식 댓글 저장 성공")
+  void saveChild() {
+    //given
+    CommentSaveRequest request = getCommentSaveRequest(1L);
+    MemberFindResponse findMember = getMemberFindResponse();
+    doReturn(findMember).when(memberService).findById(1L);
+    doReturn(1L).when(commentRepository).save(any(Comment.class));
+
+    //when
+    commentService.save(request);
+
+    //then
+    verify(commentRepository, times(1)).save(any(Comment.class));
+    verify(commentRepository, times(0)).update(any(Comment.class));
   }
 
   @Test
@@ -123,11 +140,31 @@ class CommentServiceTest {
   @Test
   @DisplayName("댓글 삭제 성공")
   void delete() {
+    //given
+    Comment comment = getComment(2L);
+    doReturn(Optional.ofNullable(comment)).when(commentRepository).findById(2L);
+
+    //when
+    commentService.delete(2L);
+
+    //then
+    verify(commentRepository, times(1)).delete(2L);
+    verify(commentRepository, times(0)).deleteByParentId(2L);
+  }
+
+  @Test
+  @DisplayName("부모 댓글 삭제 시, 자식 댓글 모두 삭제 성공")
+  void deleteParentComment() {
+    //given
+    Comment comment = getComment(1L);
+    doReturn(Optional.ofNullable(comment)).when(commentRepository).findById(1L);
+
     //when
     commentService.delete(1L);
 
     //then
     verify(commentRepository, times(1)).delete(1L);
+    verify(commentRepository, times(1)).deleteByParentId(1L);
   }
 
   private CommentUpdateRequest getCommentUpdateRequest() {
@@ -138,11 +175,11 @@ class CommentServiceTest {
         .build();
   }
 
-  private CommentSaveRequest getCommentSaveRequest() {
+  private CommentSaveRequest getCommentSaveRequest(Long parentId) {
     return CommentSaveRequest.builder()
         .memberId(1L)
         .articleId(1L)
-        .parentId(1L)
+        .parentId(parentId)
         .content("content")
         .build();
   }
