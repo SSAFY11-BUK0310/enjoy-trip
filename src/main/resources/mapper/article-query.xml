@@ -5,17 +5,37 @@
 
   <insert id="save" parameterType="enjoytrip.article.domain.Article" useGeneratedKeys="true"
     keyProperty="id">
-    insert into article(member_id, title, content, directory_uuid, views, article_type, address,
-                        created_at, created_by, updated_at, updated_by)
-    values (#{memberId}, #{title}, #{content}, #{directoryUUID}, #{views}, #{articleType},
-            #{address},
+    insert into article(
+                        member_id,
+                        title,
+                        content,
+                        directory_uuid,
+                        views,
+                        article_type,
+                        address,
+                        created_at,
+                        created_by,
+                        updated_at,
+                        updated_by
+    )
+    values (#{memberId}, #{title}, #{content}, #{directoryUUID}, #{views}, #{articleType}, #{address},
             #{createdAt}, #{createdBy}, #{updatedAt}, #{updatedBy});
   </insert>
 
   <select id="findByPage" parameterType="map"
     resultType="enjoytrip.article.domain.Article">
-    select id, member_id, title, content, views, address, article_type, directory_uuid,
-    created_at, updated_at, created_by, updated_by
+    select id,
+           member_id,
+           title,
+           content,
+           views,
+           address,
+           article_type,
+           directory_uuid,
+           created_at,
+           updated_at,
+           created_by,
+           updated_by
     from article
     <where>
       <if test="true">
@@ -38,7 +58,7 @@
   <select id="count" parameterType="map">
     select count(article_type)
     from article
-    where article_type=#{articleType}
+    where article_type = #{articleType}
     <if test="title != null and title != ''">
       and title like concat('%', #{title}, '%');
     </if>
@@ -82,4 +102,16 @@
     from article
     where id = #{id};
   </delete>
+
+  <select id="getViews" resultType="long">
+    select views
+    from article
+    where id=#{id}
+  </select>
+
+  <update id="updateViews" parameterType="long">
+    update article
+    set views = views + 1
+    where id = #{id}
+  </update>
 </mapper>

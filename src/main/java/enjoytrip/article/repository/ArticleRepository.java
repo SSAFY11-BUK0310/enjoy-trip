@@ -24,5 +24,8 @@ public interface ArticleRepository {
 
     void delete(Long id);
 
+    Long getViews(Long id);
+
+    Long updateViews(Long id);
 }
 

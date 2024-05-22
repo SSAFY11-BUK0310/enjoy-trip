@@ -32,5 +32,4 @@ public class ArticleSaveRequest {
         this.address = address;
         this.articleType = articleType;
     }
-
 }

@@ -1,9 +1,9 @@
 package enjoytrip.global.image.controller;
 
 import enjoytrip.global.image.FileStore;
-import enjoytrip.global.image.Service.ImageService;
+import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.domain.Image;
-import enjoytrip.global.image.dto.request.ImageSave2ImageStorageRequestDto;
+import enjoytrip.global.image.dto.request.ImageSave2ImageStorageRequest;
 import enjoytrip.global.image.dto.response.ImageSaveResponseDto;
 import java.io.IOException;
 import java.util.List;
@@ -74,7 +74,7 @@ public class ImageController {
     // image를 이미지 저장소에 저장한다.
     @PostMapping
     public ResponseEntity<ImageSaveResponseDto> save(
-        @RequestBody ImageSave2ImageStorageRequestDto request)
+        @RequestBody ImageSave2ImageStorageRequest request)
         throws Exception {
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(imageService.save2ImageStorage(request));
