@@ -21,8 +21,10 @@ import enjoytrip.message.mock.MockMessage;
 import enjoytrip.message.repository.MessageRepository;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -77,7 +79,11 @@ class MessageServiceTest {
 
     //then
     assertThat(response.getContent()).usingRecursiveComparison()
-        .isEqualTo(messageList.stream().map(MessageFindResponse::new).toList());
+        .isEqualTo(messageList.stream().map(MessageFindResponse::new).collect(
+            Collectors.collectingAndThen(Collectors.toList(), list -> {
+              Collections.reverse(list);
+              return list;
+            })));
   }
 
   @Test
@@ -134,8 +140,8 @@ class MessageServiceTest {
 
   private List<Message> getMessageList() {
     List<Message> list = new ArrayList<>();
-    Message messageA = getMessage();
-    Message messageB = getMessage();
+    Message messageA = getMessage("contentA");
+    Message messageB = getMessage("contentB");
     list.add(messageA);
     list.add(messageB);
     return list;
@@ -154,12 +160,12 @@ class MessageServiceTest {
         "memberEmail");
   }
 
-  private Message getMessage() {
+  private Message getMessage(String content) {
     return Message.builder()
         .id(1L)
         .messageRoomId(1L)
         .memberId(1L)
-        .content("content")
+        .content(content)
         .createdAt(currentTime)
         .updatedAt(currentTime)
         .createdBy("memberEmail")
