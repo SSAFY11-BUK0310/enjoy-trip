@@ -22,4 +22,4 @@ mybatis:
 
 #  C:/Users/dnjsd/enjoytrip/file/
 file:
-  dir: classpath:/static/images/
+  dir: C:/tmp/
