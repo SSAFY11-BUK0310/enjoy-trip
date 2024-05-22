@@ -30,4 +30,8 @@ public class Comment extends BaseEntity {
     super.changeUpdatedBy(updatedBy);
     this.content = content;
   }
+
+  public void addParentId(Long parentId) {
+    this.parentId = parentId;
+  }
 }

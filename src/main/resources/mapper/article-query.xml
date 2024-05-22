@@ -14,12 +14,12 @@
 
   <select id="findByPage" parameterType="map"
     resultType="enjoytrip.article.domain.Article">
-    select id, member_id, title, content, views, address, type, directory_uuid,
+    select id, member_id, title, content, views, address, article_type, directory_uuid,
     created_at, updated_at, created_by, updated_by
     from article
     <where>
       <if test="true">
-        and type=#{articleType}
+        and article_type=#{articleType}
       </if>
       <if test="title != null and title != ''">
         and title like concat('%', #{title}, '%')
@@ -36,9 +36,9 @@
   </select>
 
   <select id="count" parameterType="map">
-    select count(type)
+    select count(article_type)
     from article
-    where type=#{articleType}
+    where article_type=#{articleType}
     <if test="title != null and title != ''">
       and title like concat('%', #{title}, '%');
     </if>
@@ -52,7 +52,7 @@
            content,
            views,
            address,
-           type,
+           article_type,
            directory_uuid,
            created_at,
            updated_at,
@@ -70,7 +70,7 @@
         content        = #{content},
         directory_uuid = #{directoryUUID},
         views          = #{views},
-        type           = #{articleType},
+        article_type   = #{articleType},
         address        = #{address},
         updated_at     = #{updatedAt},
         updated_by     = #{updatedBy}

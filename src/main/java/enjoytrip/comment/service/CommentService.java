@@ -39,6 +39,7 @@ public class CommentService {
         .updatedBy(writer)
         .build();
     commentRepository.save(newComment);
+    addParentIdToParentComment(newComment);
     return new CommentSaveResponse(newComment.getId());
   }
 
@@ -74,5 +75,12 @@ public class CommentService {
     return commentRepository.findById(id)
         .orElseThrow(
             () -> new CommentNotFoundException(COMMENT_NOT_FOUND, "does not exist Comment"));
+  }
+
+  private void addParentIdToParentComment(Comment newComment) {
+    if (newComment.getParentId() == null) {
+      newComment.addParentId(newComment.getId());
+      commentRepository.update(newComment);
+    }
   }
 }

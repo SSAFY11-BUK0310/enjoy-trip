@@ -13,6 +13,7 @@ import enjoytrip.comment.service.CommentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +42,7 @@ public class CommentController {
   @GetMapping("/{articleId}")
   public ResponseEntity<Page<CommentFindResponse>> findByArticleId(
       @PathVariable("articleId") Long articleId,
-      @PageableDefault Pageable pageable) {
+      @PageableDefault(sort = "parent_id", direction = Direction.ASC) Pageable pageable) {
     Page<CommentFindResponse> commentPage = commentService.findByArticleId(articleId, pageable);
     return ResponseEntity.status(OK).body(commentPage);
   }
