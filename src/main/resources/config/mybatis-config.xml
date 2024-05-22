@@ -13,5 +13,7 @@
     <mapper resource="mapper/image-query.xml"/>
     <mapper resource="mapper/comment-query.xml"/>
     <mapper resource="mapper/like-query.xml"/>
+    <mapper resource="mapper/message-query.xml"/>
+    <mapper resource="mapper/message-room-query.xml"/>
   </mappers>
 </configuration>
