@@ -103,10 +103,6 @@ alter table `comment`
     add constraint comment_article_id
         foreign key (`article_id`) references `article` (`id`);
 
-alter table `comment`
-    add constraint comment_parent_id
-        foreign key (`parent_id`) references `comment` (`id`);
-
 alter table `message`
     add constraint message_member_id
         foreign key (`member_id`) references `member` (`id`);

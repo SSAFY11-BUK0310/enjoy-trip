@@ -83,4 +83,11 @@
     from comment
     where id = #{id};
   </delete>
+
+  <delete id="deleteByParentId" parameterType="long">
+    delete
+    from comment
+    where id != #{parentId}
+      and parent_id = #{parentId};
+  </delete>
 </mapper>

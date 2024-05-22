@@ -68,7 +68,15 @@ public class CommentService {
   }
 
   public void delete(Long id) {
+    Comment findComment = getCommentById(id);
+    deleteChildComments(findComment);
     commentRepository.delete(id);
+  }
+
+  private void deleteChildComments(Comment findComment) {
+    if (findComment.getParentId().equals(findComment.getId())) {
+      commentRepository.deleteByParentId(findComment.getId());
+    }
   }
 
   private Comment getCommentById(Long id) {
