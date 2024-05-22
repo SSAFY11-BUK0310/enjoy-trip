@@ -140,11 +140,31 @@ class CommentServiceTest {
   @Test
   @DisplayName("댓글 삭제 성공")
   void delete() {
+    //given
+    Comment comment = getComment(2L);
+    doReturn(Optional.ofNullable(comment)).when(commentRepository).findById(2L);
+
+    //when
+    commentService.delete(2L);
+
+    //then
+    verify(commentRepository, times(1)).delete(2L);
+    verify(commentRepository, times(0)).deleteByParentId(2L);
+  }
+
+  @Test
+  @DisplayName("부모 댓글 삭제 시, 자식 댓글 모두 삭제 성공")
+  void deleteParentComment() {
+    //given
+    Comment comment = getComment(1L);
+    doReturn(Optional.ofNullable(comment)).when(commentRepository).findById(1L);
+
     //when
     commentService.delete(1L);
 
     //then
     verify(commentRepository, times(1)).delete(1L);
+    verify(commentRepository, times(1)).deleteByParentId(1L);
   }
 
   private CommentUpdateRequest getCommentUpdateRequest() {
