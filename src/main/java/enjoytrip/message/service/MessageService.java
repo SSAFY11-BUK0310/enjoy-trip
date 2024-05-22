@@ -11,7 +11,9 @@ import enjoytrip.message.dto.response.MessageUpdateResponse;
 import enjoytrip.message.exception.MessageNotFoundException;
 import enjoytrip.message.repository.MessageRepository;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,7 +45,11 @@ public class MessageService {
   public Page<MessageFindResponse> findByMessageRoomId(Long messageRoomId, Pageable pageable) {
     List<MessageFindResponse> messageList = messageRepository.findByMessageRoomId(messageRoomId,
             pageable)
-        .stream().map(MessageFindResponse::new).toList();
+        .stream().map(MessageFindResponse::new)
+        .collect(Collectors.collectingAndThen(Collectors.toList(), list -> {
+          Collections.reverse(list);
+          return list;
+        }));
     Integer total = messageRepository.countByMessageRoomId(messageRoomId);
     return new PageImpl<>(messageList, pageable, total);
   }
