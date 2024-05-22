@@ -27,6 +27,7 @@ public class ArticleFindResponse {
     private String updatedBy;
     private List<Image> images; // 게시물에 대한 이미지 목록
     private String memberEmail;
+    private Long likeCount;
 
     public ArticleFindResponse(Article article) {
         this.id = article.getId();
@@ -43,6 +44,9 @@ public class ArticleFindResponse {
         this.updatedBy = article.getUpdatedBy();
     }
 
+    public void addLikeCount(Long likeCount) {
+        this.likeCount = likeCount;
+    }
     public void addImages(List<Image> images) {
         this.images = images;
     }

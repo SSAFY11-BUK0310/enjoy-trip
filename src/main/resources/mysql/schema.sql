@@ -1,5 +1,3 @@
-drop table if exists message;
-drop table if exists message_room;
 drop table if exists comment;
 drop table if exists image;
 drop table if exists article;
@@ -87,6 +85,18 @@ CREATE TABLE `message`
     `updated_by`      varchar(255)
 );
 
+CREATE TABLE `likes`
+(
+    `id`          bigint PRIMARY KEY AUTO_INCREMENT,
+    `member_id`   bigint NOT NULL,
+    `article_id`  bigint NOT NULL,
+    `created_at`  datetime(6) NOT NULL,
+    `updated_at` datetime(6),
+    `created_by`  varchar(255),
+    `updated_by` varchar(255)
+);
+
+
 alter table `article`
     add constraint article_member_id
         foreign key (`member_id`) references `member` (`id`);
@@ -126,3 +136,13 @@ alter table `message_room`
 alter table `message_room`
     add constraint message_room_message_room_id
         foreign key (`receiver_id`) references `member` (`id`);
+
+alter table `likes`
+    add constraint likes_article_id
+        foreign key (`article_id`) references `article` (`id`)
+            on delete cascade ;
+
+alter table `likes`
+    add constraint likes_member_id
+        foreign key (`member_id`) references `member` (`id`)
+            on delete cascade ;
