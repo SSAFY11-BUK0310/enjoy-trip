@@ -37,7 +37,7 @@ create table `article`
     `updated_by`     varchar(255) DEFAULT NULL
 );
 
-CREATE TABLE image
+CREATE TABLE `image`
 (
     id             bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     article_id     bigint             NOT NULL,
