@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import enjoytrip.global.constant.SessionConstant;
 import enjoytrip.global.exception.AuthException;
+import enjoytrip.global.service.OneWayCipherService;
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.request.MemberLoginRequest;
@@ -37,6 +38,8 @@ class AuthControllerTest {
 
   @MockBean
   MemberService memberService;
+  @MockBean
+  OneWayCipherService oneWayCipherService;
   @Autowired
   MockMvc mockMvc;
   ObjectMapper objectMapper;
@@ -98,6 +101,7 @@ class AuthControllerTest {
     String requestJson = objectMapper.writeValueAsString(request);
     MemberFindResponse memberFindResponse = new MemberFindResponse(getMember());
     doReturn(memberFindResponse).when(memberService).findByEmail(request.getEmail());
+    doReturn(true).when(oneWayCipherService).match(request.getPassword(), "password");
 
     // expected
     MvcResult mvcResult = mockMvc.perform(post("/login")
