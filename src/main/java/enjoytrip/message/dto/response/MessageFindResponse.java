@@ -1,6 +1,5 @@
 package enjoytrip.message.dto.response;
 
-import enjoytrip.comment.domain.Comment;
 import enjoytrip.message.domain.Message;
 import java.time.LocalDateTime;
 import lombok.Getter;

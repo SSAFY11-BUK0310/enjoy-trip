@@ -1,5 +1,6 @@
 package enjoytrip.message.service;
 
+import enjoytrip.article.service.ArticleService;
 import enjoytrip.member.service.MemberService;
 import enjoytrip.message.domain.MessageRoom;
 import enjoytrip.message.dto.request.MessageRoomSaveRequest;
@@ -7,6 +8,7 @@ import enjoytrip.message.dto.response.MessageRoomFindResponse;
 import enjoytrip.message.dto.response.MessageRoomSaveResponse;
 import enjoytrip.message.repository.MessageRoomRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +23,7 @@ public class MessageRoomService {
   private final MessageRoomRepository messageRoomRepository;
   private final MemberService memberService;
   private final MessageService messageService;
+  private final ArticleService articleService;
 
   public MessageRoomSaveResponse save(MessageRoomSaveRequest request) {
     // todo 이미 존재하는 메시지 룸 즉, sender 와 receiver 가 동일한 방이 이미 존재한다면 생성 X
@@ -40,10 +43,16 @@ public class MessageRoomService {
   }
 
   public Page<MessageRoomFindResponse> findByMemberId(Long memberId, Pageable pageable) {
-    List<MessageRoomFindResponse> messageRoomList = messageRoomRepository.findByMemberId(memberId,
-        pageable).stream().map(MessageRoomFindResponse::new).toList();
+    List<MessageRoom> messageRoomList = messageRoomRepository.findByMemberId(memberId, pageable);
+    List<MessageRoomFindResponse> messageRoomFindResponseList = new ArrayList<>();
+    for (MessageRoom messageRoom : messageRoomList) {
+      String articleTitle = articleService.findById(messageRoom.getArticleId()).getTitle();
+      String receiverEmail = memberService.findById(messageRoom.getReceiverId()).getEmail();
+      messageRoomFindResponseList.add(
+          new MessageRoomFindResponse(messageRoom, articleTitle, receiverEmail));
+    }
     Integer total = messageRoomRepository.countByMemberId(memberId);
-    return new PageImpl<>(messageRoomList, pageable, total);
+    return new PageImpl<>(messageRoomFindResponseList, pageable, total);
   }
 
   public void delete(Long id) {
