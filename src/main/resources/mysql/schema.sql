@@ -1,3 +1,4 @@
+drop table if exists likes;
 drop table if exists message;
 drop table if exists message_room;
 drop table if exists comment;
