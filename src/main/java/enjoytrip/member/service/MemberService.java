@@ -3,6 +3,7 @@ package enjoytrip.member.service;
 import static enjoytrip.global.exception.ErrorCode.MEMBER_NOT_FOUND;
 
 import enjoytrip.global.exception.ErrorCode;
+import enjoytrip.global.service.OneWayCipherService;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.request.MemberPasswordUpdateRequest;
 import enjoytrip.member.dto.request.MemberSaveRequest;
@@ -22,13 +23,15 @@ import org.springframework.stereotype.Service;
 public class MemberService {
 
   private final MemberRepository memberRepository;
+  private final OneWayCipherService oneWayCipherService;
 
   public MemberSaveResponse save(MemberSaveRequest request) {
+    String encryptedPassword = oneWayCipherService.encrypt(request.getPassword());
     LocalDateTime currentTime = LocalDateTime.now();
     String email = request.getEmail();
     Member newMember = Member.builder()
         .email(email)
-        .password(request.getPassword())
+        .password(encryptedPassword)
         .name(request.getName())
         .age(request.getAge())
         .gender(request.getGender())

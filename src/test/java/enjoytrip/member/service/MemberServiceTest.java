@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import enjoytrip.global.service.OneWayCipherService;
 import enjoytrip.member.domain.Gender;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.domain.RoleType;
@@ -35,6 +36,8 @@ class MemberServiceTest {
   MemberService memberService;
   @Mock
   MemberRepository memberRepository;
+  @Mock
+  OneWayCipherService oneWayCipherService;
 
   @Test
   @DisplayName("회원 저장 성공")
@@ -42,6 +45,7 @@ class MemberServiceTest {
     //given
     MemberSaveRequest request = getMemberSaveRequest();
     doReturn(1L).when(memberRepository).save(any(Member.class));
+    doReturn("encryptPassword").when(oneWayCipherService).encrypt(request.getPassword());
 
     //when
     memberService.save(request);
