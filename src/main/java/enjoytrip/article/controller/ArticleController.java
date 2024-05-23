@@ -53,6 +53,7 @@ public class ArticleController {
     public ResponseEntity<Page<ArticleFindResponse>> findByPage(
         @RequestParam("articleType") ArticleType articleType, @RequestParam("title") String title,
         @PageableDefault(size = 5, page = 0) Pageable pageable) {
+        System.out.println("ArticleController.findByPage");
         return ResponseEntity.ok(articleService.findByPage(articleType, title, pageable));
     }
 

@@ -46,9 +46,11 @@ public class ImageController {
         @PathVariable("imageUUID") String imageUUID)
         throws IOException {
 
+        System.out.println("directoryUUID = " + directoryUUID);
+
         String fullPath = fileStore.getFullPath(directoryUUID + "/" + imageUUID);
         fullPath = fullPath.substring(2);
-
+        System.out.println("fullPath = " + fullPath);
         return new UrlResource("file:" + fullPath);
     }
 
