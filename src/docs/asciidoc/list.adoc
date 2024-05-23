@@ -1,0 +1,135 @@
+Enjoy Trip API Docs
+
+== Auth
+
+=== Login
+
+operation::auth-controller-rest-docs-test/success-login[snippets="http-request,http-response"]
+
+=== Login Fail : not found email
+
+operation::auth-controller-rest-docs-test/fail-login-by-not-found-member[snippets="http-request,http-response"]
+
+=== Login Fail : mismatch password
+
+operation::auth-controller-rest-docs-test/fail-login-by-wrong-password[snippets="http-request,http-response"]
+
+=== Logout
+
+operation::auth-controller-rest-docs-test/success-logout[snippets="http-request,http-response"]
+
+== Member
+
+=== Save
+
+operation::member-controller-rest-docs-test/save[snippets="http-request,http-response"]
+
+=== Find One
+
+operation::member-controller-rest-docs-test/find[snippets="http-request,http-response"]
+
+=== Update Info
+
+operation::member-controller-rest-docs-test/update-info[snippets="http-request,http-response"]
+
+=== Update Password
+
+operation::member-controller-rest-docs-test/update-password[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::member-controller-rest-docs-test/delete[snippets="http-request,http-response"]
+
+== Article
+
+=== Save
+
+operation::article-controller-rest-docs-test/save-success-test[snippets="http-request,http-response"]
+
+=== Find One
+
+operation::article-controller-rest-docs-test/find-by-id-success-test[snippets="http-request,http-response"]
+
+=== Find Page
+
+operation::article-controller-rest-docs-test/find-by-page-success-test[snippets="http-request,http-response"]
+
+=== Update
+
+operation::article-controller-rest-docs-test/update-success-test[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::article-controller-rest-docs-test/delete-success-test[snippets="http-request,http-response"]
+
+== Comment
+
+=== Save
+
+operation::comment-controller-rest-docs-test/save[snippets="http-request,http-response"]
+
+=== Find Page
+
+operation::comment-controller-rest-docs-test/find[snippets="http-request,http-response"]
+
+=== Update
+
+operation::comment-controller-rest-docs-test/update[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::comment-controller-rest-docs-test/delete[snippets="http-request,http-response"]
+
+== Like
+
+=== Save
+
+operation::like-controller-rest-docs-test/save[snippets="http-request,http-response"]
+
+=== Find Page By Member
+
+operation::like-controller-rest-docs-test/find-by-member-id[snippets="http-request,http-response"]
+
+=== Find Page By Article
+
+operation::like-controller-rest-docs-test/find-by-article-id[snippets="http-request,http-response"]
+
+=== isExist
+
+operation::like-controller-rest-docs-test/exists[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::like-controller-rest-docs-test/delete[snippets="http-request,http-response"]
+
+== Message Room
+
+=== Save
+
+operation::message-room-controller-rest-docs-test/save[snippets="http-request,http-response"]
+
+=== Find Page
+
+operation::message-room-controller-rest-docs-test/find-by-member-id[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::message-room-controller-rest-docs-test/delete[snippets="http-request,http-response"]
+
+== Message
+
+=== Save
+
+operation::message-controller-rest-docs-test/save[snippets="http-request,http-response"]
+
+=== Find Page
+
+operation::message-controller-rest-docs-test/find-by-message-room-id[snippets="http-request,http-response"]
+
+=== Update
+
+operation::message-controller-rest-docs-test/update[snippets="http-request,http-response"]
+
+=== Delete
+
+operation::message-room-controller-rest-docs-test/delete[snippets="http-request,http-response"]

@@ -13,6 +13,7 @@ import enjoytrip.article.dto.response.ArticleFindResponse;
 import enjoytrip.article.repository.ArticleRepository;
 import enjoytrip.global.image.service.ImageService;
 import enjoytrip.global.image.dto.request.Base64Image;
+import enjoytrip.like.service.LikeService;
 import enjoytrip.member.domain.Member;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.service.MemberService;
@@ -28,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -44,6 +46,8 @@ class ArticleServiceTest {
     @Mock
     private ImageService imageService;
 
+    @Mock
+    private LikeService likeService;
 
     @Mock
     private MemberService memberService;
@@ -63,6 +67,7 @@ class ArticleServiceTest {
         doReturn(content).when(articleRepository).findByPage(articleType, title, pageable);
         doReturn(10).when(articleRepository).count(articleType, title);
         doReturn(memberFindResponse).when(memberService).findById(1L);
+        doReturn(1L).when(likeService).countByArticleId(1L);
         // when
         Page<ArticleFindResponse> response = articleService.findByPage(articleType, title,
             pageable);
@@ -79,6 +84,7 @@ class ArticleServiceTest {
         doReturn(Optional.ofNullable(article)).when(articleRepository).findById(1L);
         MemberFindResponse memberFindResponse = new MemberFindResponse(getMember());
         doReturn(memberFindResponse).when(memberService).findById(1L);
+        doReturn(1L).when(likeService).countByArticleId(1L);
         // when
         ArticleFindResponse response = articleService.findById(1L);
 
