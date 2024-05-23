@@ -13,6 +13,7 @@ java {
 }
 
 configurations {
+    asciidoctorExtensions
     compileOnly {
         extendsFrom annotationProcessor
     }
@@ -43,7 +44,8 @@ dependencies {
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.3'
-    // rest docs
+    //rest-docs
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
     testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     // test lombok
     testCompileOnly 'org.projectlombok:lombok'
@@ -53,11 +55,32 @@ dependencies {
 }
 
 tasks.named('test') {
+    useJUnitPlatform()
+}
+
+test {
     outputs.dir snippetsDir
     useJUnitPlatform()
 }
 
-tasks.named('asciidoctor') {
-    inputs.dir snippetsDir
+asciidoctor {
     dependsOn test
+    configurations 'asciidoctorExtensions'
+    inputs.dir snippetsDir
+
+    sources {
+        include("**/index.adoc", "**/common/*.adoc")
+    }
+
+    baseDirFollowsSourceFile()
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')
+}
+
+task copyDocument(type: Copy) {
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
 }
