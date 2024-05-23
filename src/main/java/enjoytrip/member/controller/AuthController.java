@@ -6,6 +6,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.NO_CONTENT;
 
 import enjoytrip.global.exception.AuthException;
+import enjoytrip.global.service.OneWayCipherService;
 import enjoytrip.member.dto.request.MemberLoginRequest;
 import enjoytrip.member.dto.response.MemberFindResponse;
 import enjoytrip.member.dto.response.MemberLoginResponse;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
 
   private final MemberService memberService;
+  private final OneWayCipherService oneWayCipherService;
 
   @PostMapping("/login")
   public ResponseEntity<MemberLoginResponse> login(
@@ -45,8 +47,8 @@ public class AuthController {
     return ResponseEntity.status(NO_CONTENT).build();
   }
 
-  private static void checkPassword(String originalPassword, String requestPassword) {
-    if (!originalPassword.equals(requestPassword)) {
+  private void checkPassword(String originalPassword, String requestPassword) {
+    if (!oneWayCipherService.match(requestPassword, originalPassword)) {
       throw new AuthException(LOGIN_FAILED, "fail login by wrong password");
     }
   }
