@@ -3,6 +3,7 @@ plugins {
     id 'org.springframework.boot' version '3.2.5'
     id 'io.spring.dependency-management' version '1.1.4'
     id 'org.asciidoctor.jvm.convert' version '3.3.2'
+    id 'jacoco'
 }
 
 group = 'enjoytrip'
@@ -63,6 +64,7 @@ tasks.named('test') {
 test {
     outputs.dir snippetsDir
     useJUnitPlatform()
+    finalizedBy jacocoTestReport
 }
 
 asciidoctor {
@@ -85,4 +87,55 @@ task copyDocument(type: Copy) {
     dependsOn asciidoctor
     from file("build/docs/asciidoc")
     into file("src/main/resources/static/docs")
+}
+
+
+jacoco {
+    toolVersion = "0.8.8"
+}
+
+
+jacocoTestReport {
+    dependsOn test // 리포트가 만들어지기 전 테스트 실행되어야 한다.
+    reports {
+        xml.required = false
+        csv.required = false
+        html.required = true
+    }
+    def Qdomains = ["**/dto/**"]
+//    for(qPattern in "**/dto" .. "**/QZ") {
+//        Qdomains.add(qPattern+"*")
+//    }
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it, // 리포트 결과에 제외시킬 디렉토리
+                    exclude: ['**/dto'] + Qdomains)
+        }))
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+
+jacocoTestCoverageVerification { // 코드 커버리지 측정항목 시행
+    def Qdomains = []
+
+    for (qPattern in "*.QA".."*.QZ") {
+        Qdomains.add(qPattern + "*")
+    }
+
+    violationRules { // 위반 규칙
+        rule {
+            limit {
+                counter = 'METHOD'
+                value = 'COVEREDRATIO'
+                minimum = 0.85
+            }
+
+            excludes = [
+                    // 커버리지 제외할 클래스
+                    '**.dto.*'
+            ] + Qdomains
+        }
+    }
 }
