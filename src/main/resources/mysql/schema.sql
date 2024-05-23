@@ -1,5 +1,6 @@
 drop table if exists likes;
 drop table if exists message;
+drop table if exists likes;
 drop table if exists message_room;
 drop table if exists comment;
 drop table if exists image;
@@ -38,7 +39,7 @@ create table `article`
     `updated_by`     varchar(255) DEFAULT NULL
 );
 
-CREATE TABLE image
+CREATE TABLE `image`
 (
     id             bigint PRIMARY KEY NOT NULL AUTO_INCREMENT,
     article_id     bigint             NOT NULL,
